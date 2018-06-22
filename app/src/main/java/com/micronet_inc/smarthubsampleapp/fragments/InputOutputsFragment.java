@@ -144,7 +144,7 @@ public class InputOutputsFragment extends Fragment {
         switch (mDockState) {
             case Intent.EXTRA_DOCK_STATE_UNDOCKED:
                 cradleStateMsg = getString(R.string.not_in_cradle_state_text);
-                ignitionStateMsg = getString(R.string.ignition_off_state_text);
+                ignitionStateMsg = getString(R.string.ignition_unknown_state_text);
                 break;
             case Intent.EXTRA_DOCK_STATE_DESK:
             case Intent.EXTRA_DOCK_STATE_LE_DESK:
@@ -160,7 +160,7 @@ public class InputOutputsFragment extends Fragment {
             default:
                 /* this state indicates un-defined docking state */
                 cradleStateMsg = getString(R.string.not_in_cradle_state_text);
-                ignitionStateMsg = getString(R.string.ignition_off_state_text);
+                ignitionStateMsg = getString(R.string.ignition_unknown_state_text);
                 break;
         }
 
