@@ -1,1 +1,1 @@
-include ':app', ':mcontrol', ':MicronetHardwareLib'
+include ':app', ':MicronetHardwareLib'
