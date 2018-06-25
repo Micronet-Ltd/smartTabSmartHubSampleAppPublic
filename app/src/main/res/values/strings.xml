@@ -2,5 +2,15 @@
     <string name="app_name">SmartHubSampleApp</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ADCs">ADC voltages</string>
+    <string name="hello_blank_fragment">helloBlank</string>
+
+    <string name="in_cradle_state_text">In Cradle</string>
+    <string name="not_in_cradle_state_text">Not In Cradle</string>
+    <string name="ignition_off_state_text">Ignition Off</string>
+    <string name="ignition_on_state_text">Ignition On</string>
+    <string name="ignition_unknown_state_text">Ignition Unknown</string>
+    <string name="ignition_state">Ignition State: </string>
+    <string name="cradle_state">Cradle State: </string>
+    <string name="refresh">Refresh</string>
 </resources>
