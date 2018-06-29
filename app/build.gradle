@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        treqr5platformkey
+    }
+
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.micronet_inc.smarthubsampleapp"
@@ -19,6 +23,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.treqr5platformkey
+        }
+        debug{
+            signingConfig signingConfigs.treqr5platformkey
         }
     }
 }
@@ -33,3 +41,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 }
+
+def props = new Properties()
+
+props.load(new FileInputStream(rootProject.file("treqr5platformkey.properties")))
+android.signingConfigs.treqr5platformkey.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.treqr5platformkey.storePassword props.keyStorePassword
+android.signingConfigs.treqr5platformkey.keyAlias props.keyAlias
+android.signingConfigs.treqr5platformkey.keyPassword props.keyAliasPassword

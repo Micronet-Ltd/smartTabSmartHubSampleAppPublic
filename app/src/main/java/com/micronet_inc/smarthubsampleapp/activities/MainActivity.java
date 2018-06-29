@@ -1,5 +1,6 @@
 package com.micronet_inc.smarthubsampleapp.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.micronet_inc.smarthubsampleapp.R;
 import com.micronet_inc.smarthubsampleapp.fragments.AboutFragment;
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.e(TAG, "Configuration changed: " + newConfig.toString());
     }
 
     private void setupViewPager(ViewPager viewPager) {

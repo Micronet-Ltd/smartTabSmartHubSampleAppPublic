@@ -33,24 +33,36 @@ public class GpiAdcTextAdapter extends BaseAdapter {
     }
 
     public void populateGpisAdcs(){
-//        try {
-            int[] adcVoltages = mh.getAllAnalogInput();
-            pairList.clear();
+        int[] adcVoltages = mh.getAllAnalogInput();
+        pairList.clear();
 
-            int i = 0;
-            for (ADCs adcs : ADCs.values()) {
+        boolean canCommunicateWithMcu = true;
+
+        // If the app cannot communicate with the mcu then set all values to empty strings.
+        if(adcVoltages[0] == -1){
+            canCommunicateWithMcu = false;
+        }
+
+        int i = 0;
+        for (ADCs adcs : ADCs.values()) {
+            if(canCommunicateWithMcu){
                 pairList.add(new Pair<String, String>(adcs.getString(), String.valueOf(adcVoltages[i++]) + " mV"));
+            }else{
+                pairList.add(new Pair<String, String>(adcs.getString(), ""));
             }
 
-            int[] gpiValues = mh.getAllPinInState();
-            i = 0;
-            for (GPIs gpis : GPIs.values()) {
+        }
+
+        int[] gpiValues = mh.getAllPinInState();
+        i = 0;
+        for (GPIs gpis : GPIs.values()) {
+            if(canCommunicateWithMcu){
                 pairList.add(new Pair<String, String>(gpis.getString(), String.valueOf(gpiValues[i++])));
+            }else{
+                pairList.add(new Pair<String, String>(gpis.getString(), ""));
             }
-//        }catch (MicronetHardwareException ex) {
-//            Log.e(TAG, ex.toString());
-//        }
 
+        }
     }
 
     @Override
