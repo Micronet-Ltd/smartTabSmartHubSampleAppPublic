@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    tools:context=".fragments.HWFragment">
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_dark"
+        android:divider="@android:color/black"
+        android:dividerPadding="2dp"
+        android:showDividers="beginning|middle|end"
+        android:stretchColumns="*"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:showDividers="beginning|middle|end">
+
+            <TextView
+                android:id="@+id/lblRtcCalReg"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="RTC Calibration Registers"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textRtcCalibrationRegisters"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteY="8dp">
+
+            <TextView
+                android:id="@+id/lblRtcDatetime"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="RTC Datetime"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textRtcDatetime"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/lblRtcBatteryState"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="RTC Battery State"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textBatteryState"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/lblPowerUpReason"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Power Up Reason"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textPowerUpReason"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/lblLedState"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Led State"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textLedState"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:background="@android:color/background_light"
+                android:padding="0dp"
+                android:text="Unknown"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/lblSetLedState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:padding="0dp"
+        android:text="Set Led State:"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+    <TextView
+        android:id="@+id/lblSetRtcDatetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:padding="0dp"
+        android:text="Set RTC Datetime: "
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/lblSetLedState"
+        app:layout_constraintTop_toBottomOf="@+id/lblSetLedState" />
+
+    <TextView
+        android:id="@+id/lblSetDelayedPowerDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:padding="0dp"
+        android:text="Set Delayed Power Down:"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintTop_toBottomOf="@+id/lblSetRtcDatetime" />
+
+    <Button
+        android:id="@+id/btnSetRtcDatetime"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:text="Set"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
+        app:layout_constraintEnd_toEndOf="@+id/btnSetLedState"
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
+
+    <Button
+        android:id="@+id/btnTime"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="24dp"
+        android:text="Time"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
+        app:layout_constraintEnd_toStartOf="@+id/btnSetRtcDatetime"
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
+
+    <Button
+        android:id="@+id/btnDate"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="8dp"
+        android:text="Date"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
+        app:layout_constraintEnd_toStartOf="@+id/btnTime"
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
+
+    <EditText
+        android:id="@+id/editTextSetPowerDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="Seconds"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetDelayedPowerDown"
+        app:layout_constraintEnd_toStartOf="@+id/btnSetPowerDown"
+        app:layout_constraintStart_toEndOf="@+id/lblSetDelayedPowerDown"
+        app:layout_constraintTop_toTopOf="@+id/lblSetDelayedPowerDown" />
+
+    <Button
+        android:id="@+id/btnSetPowerDown"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:text="Set"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextSetPowerDown"
+        app:layout_constraintEnd_toEndOf="@+id/btnSetRtcDatetime"
+        app:layout_constraintTop_toTopOf="@+id/editTextSetPowerDown" />
+
+    <Button
+        android:id="@+id/btnSetLedState"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="8dp"
+        android:text="Set"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblSetLedState" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSetLedState" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/lblSetDelayedPowerDown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSetRtcDatetime" />
+
+    <EditText
+        android:id="@+id/editTextBrightness"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Light (0-255)"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
+        app:layout_constraintEnd_toStartOf="@+id/editTextRed"
+        app:layout_constraintTop_toTopOf="@+id/lblSetLedState"
+        app:layout_constraintVertical_bias="0.523" />
+
+    <EditText
+        android:id="@+id/editTextRed"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Red (0-255)"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
+        app:layout_constraintEnd_toStartOf="@+id/editTextGreen"
+        app:layout_constraintTop_toTopOf="@+id/lblSetLedState"
+        app:layout_constraintVertical_bias="0.523" />
+
+    <EditText
+        android:id="@+id/editTextGreen"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Green (0-255)"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
+        app:layout_constraintEnd_toStartOf="@+id/editTextBlue"
+        app:layout_constraintTop_toTopOf="@+id/lblSetLedState" />
+
+    <EditText
+        android:id="@+id/editTextBlue"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Blue (0-255)"
+        android:inputType="numberSigned"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
+        app:layout_constraintEnd_toStartOf="@+id/btnSetLedState"
+        app:layout_constraintTop_toTopOf="@+id/lblSetLedState" />
+
+    <TextView
+        android:id="@+id/lblRtcDatetimeSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2000-00-00 00:00:00"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintEnd_toStartOf="@+id/btnDate"
+        app:layout_constraintStart_toEndOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintTop_toTopOf="@+id/lblSetRtcDatetime" />
+
+</android.support.constraint.ConstraintLayout>

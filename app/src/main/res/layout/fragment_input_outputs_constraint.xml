@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    tools:context=".fragments.InputOutputsFragment">
+
+    <!--<ScrollView-->
+    <!--android:id="@+id/ADCs"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:isScrollContainer="false">-->
+
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:horizontalSpacing="2dp"
+        android:numColumns="4"
+        android:verticalSpacing="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></GridView>
+
+    <Button
+        android:id="@+id/btnRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/refresh"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.99"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridview" />
+
+    <TextView
+        android:id="@+id/textViewCradleState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/not_in_cradle_state_text"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@+id/lblCradleState"
+        app:layout_constraintTop_toTopOf="@+id/lblCradleState" />
+
+    <TextView
+        android:id="@+id/textViewIgnitionState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/ignition_off_state_text"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="@+id/textViewCradleState"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCradleState" />
+
+    <TextView
+        android:id="@+id/lblCradleState"
+        android:layout_width="93dp"
+        android:layout_height="19dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="7"
+        android:text="@string/cradle_state"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.61"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridview" />
+
+    <TextView
+        android:id="@+id/lblIIgnitionState"
+        android:layout_width="93dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="8dp"
+        android:ems="7"
+        android:text="@string/ignition_state"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="@+id/lblCradleState"
+        app:layout_constraintTop_toBottomOf="@+id/lblCradleState" />
+
+    <View
+        android:id="@+id/verticalDivider"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridview" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonOutput1"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:textOff="1 Off"
+        android:textOn="1 On"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/verticalDivider" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonOutput2"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:textOff="2 Off"
+        android:textOn="2 On"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/toggleButtonOutput1"
+        app:layout_constraintTop_toTopOf="@+id/toggleButtonOutput1" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonOutput3"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:text="ToggleButton"
+        android:textOff="3 Off"
+        android:textOn="3 On"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/toggleButtonOutput1"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButtonOutput1" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonOutput4"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:text="ToggleButton"
+        android:textOff="4 Off"
+        android:textOn="4 On"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/toggleButtonOutput3"
+        app:layout_constraintTop_toTopOf="@+id/toggleButtonOutput3" />
+
+    <TextView
+        android:id="@+id/lblOutputs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Outputs"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/verticalDivider" />
+
+    <View
+        android:id="@+id/horizontalDivider"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/verticalDivider" />
+
+
+    <!--</ScrollView>-->
+</android.support.constraint.ConstraintLayout>
