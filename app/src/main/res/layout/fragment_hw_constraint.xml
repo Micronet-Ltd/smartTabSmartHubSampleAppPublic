@@ -232,45 +232,37 @@
         app:layout_constraintStart_toStartOf="@+id/lblSetRtcDatetime"
         app:layout_constraintTop_toBottomOf="@+id/lblSetRtcDatetime" />
 
-    <EditText
-        android:id="@+id/editTextRtcDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:hint="Date (mm/dd/yyyy)"
-        android:inputType="date"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/lblSetRtcDatetime"
-        app:layout_constraintEnd_toStartOf="@+id/editTextRtcTime"
-        app:layout_constraintStart_toEndOf="@+id/lblSetRtcDatetime"
-        app:layout_constraintTop_toTopOf="@+id/lblSetRtcDatetime" />
-
-    <EditText
-        android:id="@+id/editTextRtcTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Time (hh:mm:ss)"
-        android:inputType="time"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextRtcDate"
-        app:layout_constraintEnd_toStartOf="@+id/btnSetRtcDatetime"
-        app:layout_constraintTop_toTopOf="@+id/editTextRtcDate" />
-
     <Button
         android:id="@+id/btnSetRtcDatetime"
         android:layout_width="68dp"
         android:layout_height="39dp"
         android:text="Set"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextRtcTime"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
         app:layout_constraintEnd_toEndOf="@+id/btnSetLedState"
-        app:layout_constraintTop_toTopOf="@+id/editTextRtcTime" />
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
+
+    <Button
+        android:id="@+id/btnTime"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="24dp"
+        android:text="Time"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
+        app:layout_constraintEnd_toStartOf="@+id/btnSetRtcDatetime"
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
+
+    <Button
+        android:id="@+id/btnDate"
+        android:layout_width="68dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="8dp"
+        android:text="Date"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRtcDatetimeSet"
+        app:layout_constraintEnd_toStartOf="@+id/btnTime"
+        app:layout_constraintTop_toTopOf="@+id/lblRtcDatetimeSet" />
 
     <EditText
         android:id="@+id/editTextSetPowerDown"
@@ -367,6 +359,7 @@
         android:ems="10"
         android:hint="Green (0-255)"
         android:inputType="numberSigned"
+        android:textAlignment="center"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
         app:layout_constraintEnd_toStartOf="@+id/editTextBlue"
@@ -385,5 +378,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/lblSetLedState"
         app:layout_constraintEnd_toStartOf="@+id/btnSetLedState"
         app:layout_constraintTop_toTopOf="@+id/lblSetLedState" />
+
+    <TextView
+        android:id="@+id/lblRtcDatetimeSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2000-00-00 00:00:00"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintEnd_toStartOf="@+id/btnDate"
+        app:layout_constraintStart_toEndOf="@+id/lblSetRtcDatetime"
+        app:layout_constraintTop_toTopOf="@+id/lblSetRtcDatetime" />
 
 </android.support.constraint.ConstraintLayout>

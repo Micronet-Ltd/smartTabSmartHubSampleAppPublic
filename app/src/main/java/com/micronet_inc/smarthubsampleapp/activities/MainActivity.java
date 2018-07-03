@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new InputOutputsFragment(), "GPIOs");
-        adapter.addFragment(new HWFragment(), "Misc");
+//        adapter.addFragment(new HWFragment(), "Misc");
         adapter.addFragment(new CanBusFragment(), "CanBus");
         adapter.addFragment(new J1708Fragment(), "J1708");
         adapter.addFragment(new AboutFragment(), "Info");

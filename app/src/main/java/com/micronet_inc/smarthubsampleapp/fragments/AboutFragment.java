@@ -51,6 +51,12 @@ public class AboutFragment extends Fragment {
                     mcuVersion, fpgaVersion, Build.VERSION.RELEASE, Build.DISPLAY, Build.MODEL, Build.SERIAL));
         }catch (MicronetHardwareException ex){
             Log.e(TAG, ex.toString());
+            TextView txtDeviceInfo = (TextView)rootView.findViewById(R.id.txtDeviceInfo);
+            txtDeviceInfo.setText(String.format("Android OS Release: %s\n" +
+                            "Android Build Number: %s\n" +
+                            "Model %s\n" +
+                            "Serial: %s\n",
+                    Build.VERSION.RELEASE, Build.DISPLAY, Build.MODEL, Build.SERIAL));
         }
         return rootView;
     }

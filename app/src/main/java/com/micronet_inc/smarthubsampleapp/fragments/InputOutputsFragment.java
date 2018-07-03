@@ -33,7 +33,7 @@ public class InputOutputsFragment extends Fragment {
     public static InputOutputsFragment sInstance = null;
     View rootView;
     private final String TAG = "SHInputOutputFragment";
-    public static long POLLING_INTERVAL_MS = 5000;
+    public static long POLLING_INTERVAL_MS = 3000;
     private GpiAdcTextAdapter gpiAdcTextAdapter;
     private Handler mHandler = null;
     public int mDockState = -1;
@@ -81,11 +81,11 @@ public class InputOutputsFragment extends Fragment {
         btnOutput1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(btnOutput1.isChecked()){
-                    changeOutputState(1, true);
-                }else{
-                    changeOutputState(1, false);
-                }
+//                if(btnOutput1.isChecked()){
+//                    changeOutputState(1, true);
+//                }else{
+//                    changeOutputState(1, false);
+//                }
             }
         });
 
@@ -93,11 +93,11 @@ public class InputOutputsFragment extends Fragment {
         btnOutput2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(btnOutput2.isChecked()){
-                    changeOutputState(2, true);
-                }else{
-                    changeOutputState(2, false);
-                }
+//                if(btnOutput2.isChecked()){
+//                    changeOutputState(2, true);
+//                }else{
+//                    changeOutputState(2, false);
+//                }
             }
         });
 
@@ -105,11 +105,11 @@ public class InputOutputsFragment extends Fragment {
         btnOutput3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(btnOutput3.isChecked()){
-                    changeOutputState(3, true);
-                }else{
-                    changeOutputState(3, false);
-                }
+//                if(btnOutput3.isChecked()){
+//                    changeOutputState(3, true);
+//                }else{
+//                    changeOutputState(3, false);
+//                }
             }
         });
 
@@ -117,11 +117,11 @@ public class InputOutputsFragment extends Fragment {
         btnOutput4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(btnOutput4.isChecked()){
-                    changeOutputState(4, true);
-                }else{
-                    changeOutputState(4, false);
-                }
+//                if(btnOutput4.isChecked()){
+//                    changeOutputState(4, true);
+//                }else{
+//                    changeOutputState(4, false);
+//                }
             }
         });
 
@@ -135,9 +135,6 @@ public class InputOutputsFragment extends Fragment {
         super.onResume();
         sInstance = this;
         getActivity().registerReceiver(dockStateReceiver, dockFilter);
-//        mDockState = getCurrentDockState();
-//        gpiAdcTextAdapter.populateGpisAdcs();
-//        gpiAdcTextAdapter.notifyDataSetChanged();
 
         displayCradleState();
         startPollingThread();
@@ -151,7 +148,7 @@ public class InputOutputsFragment extends Fragment {
         super.onPause();
         Log.d(TAG, "onPause");
 
-        // Stop the polling thread.
+        // Stop the polling thread when the fragment is paused.
         mHandler.removeCallbacks(pollingThreadRunnable);
         Log.d(TAG, "Polling thread stopped.");
     }
@@ -265,22 +262,36 @@ public class InputOutputsFragment extends Fragment {
 
         // Change the state of the GPIO
         try {
-            String commands0[] = {"/system/bin/se_dom_ex", "\"chmod 666 /sys/class/gpio/gpio700/value\""};
-            java.lang.Process process = Runtime.getRuntime().exec(commands0);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // Check to see what id the app is. Currently to run se_dom_ex you have to be shell.
+            java.lang.Process processID = Runtime.getRuntime().exec("id");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(processID.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
+                Log.d(TAG, line);
+            }
+            bufferedReader.close();
+
+            // DOESN'T WORK
+            // Tried this with and without quotes and it doesn't seem to work as it does in the shell.
+            String commandsChmod[] = {"/system/bin/se_dom_ex", "\"chmod 666 /sys/class/gpio/gpio700/value\""};
+            java.lang.Process processChmod = Runtime.getRuntime().exec(commandsChmod);
+            BufferedReader bufferedReaderChmod = new BufferedReader(new InputStreamReader(processChmod.getInputStream()));
+            while ((line = bufferedReaderChmod.readLine()) != null) {
                 Log.e(TAG, line);
             }
+            bufferedReaderChmod.close();
 
-            String commands1[] = {"/system/bin/se_dom_ex", "echo " + gpioState + "> /sys/class/gpio/gpio700/value"};
-            java.lang.Process process2 = Runtime.getRuntime().exec(commands1);
-            bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((line = bufferedReader.readLine()) != null) {
+            // This command won't work for the same reason as above but also because echo doesn't seem to work
+            // properly when I try to do it this way. For example, if I try echo "hello world" using this method it
+            // doesn't work either.
+            String commandsEcho[] = {"/system/bin/se_dom_ex", "echo " + gpioState + "> /sys/class/gpio/gpio700/value"};
+            java.lang.Process processEcho = Runtime.getRuntime().exec(commandsEcho);
+            BufferedReader bufferedReaderEcho = new BufferedReader(new InputStreamReader(processEcho.getInputStream()));
+            while ((line = bufferedReaderEcho.readLine()) != null) {
                 Log.e(TAG, line);
             }
             Log.e(TAG, "Output " + i + " set to state " + gpioState + ". GPIO Number: " + gpioNum);
-            bufferedReader.close();
+            bufferedReaderEcho.close();
         } catch (IOException e) {
             Log.e(TAG, e.toString());
         }
