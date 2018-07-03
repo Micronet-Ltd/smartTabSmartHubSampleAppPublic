@@ -1,13 +1,19 @@
 package com.micronet_inc.smarthubsampleapp.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.micronet_inc.smarthubsampleapp.BuildConfig;
 import com.micronet_inc.smarthubsampleapp.R;
@@ -19,6 +25,16 @@ import micronet.hardware.exception.MicronetHardwareException;
 public class AboutFragment extends Fragment {
     private static final String TAG = "SCAboutFragment";
     View rootView;
+
+    private IntentFilter dockFilter = new IntentFilter(Intent.ACTION_DOCK_EVENT);
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received dock event broadcast: " + + intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1));
+            updateInfoText();
+        }
+    };
+
     public AboutFragment() {
         // Required empty public constructor
     }
@@ -64,11 +80,40 @@ public class AboutFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().registerReceiver(broadcastReceiver, dockFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
+
+    public void updateInfoText(){
+        MicronetHardware mh = MicronetHardware.getInstance();
+        try{
+            String mcuVersion = mh.getMcuVersion();
+            String fpgaVersion = mh.getFpgaVersion();
+            TextView txtDeviceInfo = (TextView)rootView.findViewById(R.id.txtDeviceInfo);
+            txtDeviceInfo.setText(String.format("MCU Version: %s \n" +
+                            "FPGA Version: %s\n" +
+                            "Android OS Release: %s\n" +
+                            "Android Build Number: %s\n" +
+                            "Model %s\n" +
+                            "Serial: %s\n",
+                    mcuVersion, fpgaVersion, Build.VERSION.RELEASE, Build.DISPLAY, Build.MODEL, Build.SERIAL));
+        }catch (MicronetHardwareException ex){
+            Log.e(TAG, ex.toString());
+            TextView txtDeviceInfo = (TextView)rootView.findViewById(R.id.txtDeviceInfo);
+            txtDeviceInfo.setText(String.format("Android OS Release: %s\n" +
+                            "Android Build Number: %s\n" +
+                            "Model %s\n" +
+                            "Serial: %s\n",
+                    Build.VERSION.RELEASE, Build.DISPLAY, Build.MODEL, Build.SERIAL));
+        }
+        Log.d(TAG, "Updated text on info tab");
     }
 
     public void getVersions(){
@@ -83,4 +128,6 @@ public class AboutFragment extends Fragment {
             Log.e(TAG, ex.toString());
         }
     }
+
+
 }

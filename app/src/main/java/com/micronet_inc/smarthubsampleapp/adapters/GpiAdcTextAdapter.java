@@ -46,7 +46,15 @@ public class GpiAdcTextAdapter extends BaseAdapter {
         int i = 0;
         for (ADCs adcs : ADCs.values()) {
             if(canCommunicateWithMcu){
-                pairList.add(new Pair<String, String>(adcs.getString(), String.valueOf(adcVoltages[i++]) + " mV"));
+                String value;
+                if(i != 10){
+                    value = String.valueOf(adcVoltages[i++]) + " mV";
+                }else{
+                    float temperature = ((float)adcVoltages[i++]-500)/10f;
+                    value = String.valueOf(String.format(java.util.Locale.US, "%.1f", temperature) + " \u2103");
+                }
+
+                pairList.add(new Pair<String, String>(adcs.getString(), value));
             }else{
                 pairList.add(new Pair<String, String>(adcs.getString(), ""));
             }
