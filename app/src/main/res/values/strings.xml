@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartHubSampleApp</string>
+    <string name="app_name">Smart Hub Sample App</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="ADCs">ADC voltages</string>

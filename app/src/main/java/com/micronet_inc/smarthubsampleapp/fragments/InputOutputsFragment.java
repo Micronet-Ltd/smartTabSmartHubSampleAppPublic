@@ -184,6 +184,20 @@ public class InputOutputsFragment extends Fragment {
         }
     };
 
+    final Runnable updateGpios = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                gpiAdcTextAdapter.populateGpisAdcs();
+                gpiAdcTextAdapter.notifyDataSetChanged();
+                //Toast.makeText(getContext().getApplicationContext(), "GPIs and ADCs polled", Toast.LENGTH_SHORT).show();
+            }catch (Exception ex){
+                Log.e(TAG, ex.getMessage());
+            }
+        }
+    };
+
     /*
      * get the current docking state
      * from the last ACTION_DOCK_EVENT sticky intent
@@ -230,6 +244,9 @@ public class InputOutputsFragment extends Fragment {
         TextView ignitionStateTextview = (TextView) rootView.findViewById(R.id.textViewIgnitionState);
         cradleStateTextview.setText(cradleStateMsg);
         ignitionStateTextview.setText(ignitionStateMsg);
+
+        Handler handler = new Handler();
+        handler.postDelayed(updateGpios, 2000);
     }
 
     public void changeOutputState(int i, boolean state){
