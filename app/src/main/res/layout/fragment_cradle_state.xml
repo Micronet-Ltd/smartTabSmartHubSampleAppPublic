@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent" android:layout_height="match_parent">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="57dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true">
+
+    <TextView
+      android:id="@+id/lblDeviceCradleIgnState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentTop="true"
+      android:text="@string/device_cradle_ign_state_text"
+      android:textColor="@color/colorPrimary"
+      android:textSize="14sp"/>
+
+    <View
+      android:id="@+id/xAxis"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"/>
+
+    <View
+      android:id="@+id/yAxis"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"/>
+
+    <TextView
+      android:id="@+id/lblCradleState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_alignLeft="@+id/xAxis"
+      android:layout_below="@id/lblDeviceCradleIgnState"
+      android:text="@string/cradle_state"
+      android:textSize="10sp"/>
+
+    <TextView
+      android:id="@+id/textViewCradleState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_alignLeft="@+id/yAxis"
+      android:layout_below="@id/lblDeviceCradleIgnState"
+      android:text="@string/not_in_cradle_state_text"
+      android:textSize="10sp"/>
+
+    <TextView
+      android:id="@+id/lblIIgnitionState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/lblCradleState"
+      android:text="@string/ignition_state"
+      android:textSize="10sp"/>
+
+    <TextView
+      android:id="@+id/textViewIgnitionState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/yAxis"
+      android:layout_below="@id/textViewCradleState"
+      android:text="@string/ignition_off_state_text"
+      android:textSize="10sp"/>
+
+  </RelativeLayout>
+
+</RelativeLayout>
