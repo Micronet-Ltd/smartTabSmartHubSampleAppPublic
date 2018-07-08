@@ -8,7 +8,7 @@
 /build
 /captures
 .externalNativeBuild
-
+gradlew.bat
 
 #micronet files
 treqr5platformkey.properties
