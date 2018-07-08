@@ -14,9 +14,7 @@ import com.micronet_inc.smarthubsampleapp.R;
 import com.micronet_inc.smarthubsampleapp.fragments.AboutFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.Can1OverviewFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.Can2OverviewFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.CanBusFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.CanbusFramesFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.HWFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.InputOutputsFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.J1708Fragment;
 
