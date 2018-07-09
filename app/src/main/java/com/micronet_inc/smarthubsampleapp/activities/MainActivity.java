@@ -12,8 +12,9 @@ import android.util.Log;
 
 import com.micronet_inc.smarthubsampleapp.R;
 import com.micronet_inc.smarthubsampleapp.fragments.AboutFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.CanBusFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.HWFragment;
+import com.micronet_inc.smarthubsampleapp.fragments.Can1OverviewFragment;
+import com.micronet_inc.smarthubsampleapp.fragments.Can2OverviewFragment;
+import com.micronet_inc.smarthubsampleapp.fragments.CanbusFramesFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.InputOutputsFragment;
 import com.micronet_inc.smarthubsampleapp.fragments.J1708Fragment;
 
@@ -47,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new InputOutputsFragment(), "GPIOs");
 //        adapter.addFragment(new HWFragment(), "Misc");
-        adapter.addFragment(new CanBusFragment(), "CanBus");
+        adapter.addFragment(new Can1OverviewFragment(), "Can1");
+        adapter.addFragment(new Can2OverviewFragment(), "Can2");
+        adapter.addFragment(new CanbusFramesFragment(), "CanFrames");
         adapter.addFragment(new J1708Fragment(), "J1708");
         adapter.addFragment(new AboutFragment(), "Info");
         viewPager.setAdapter(adapter);

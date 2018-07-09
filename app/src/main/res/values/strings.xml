@@ -5,6 +5,8 @@
     <string name="ADCs">ADC voltages</string>
     <string name="hello_blank_fragment">helloBlank</string>
 
+    <!-- Cradle Strings -->
+    <string name="device_cradle_ign_state_text">Device Cradle and Ignition State</string>
     <string name="in_cradle_state_text">In Cradle</string>
     <string name="not_in_cradle_state_text">Not In Cradle</string>
     <string name="ignition_off_state_text">Ignition Off</string>
@@ -13,4 +15,35 @@
     <string name="ignition_state">Ignition State: </string>
     <string name="cradle_state">Cradle State: </string>
     <string name="refresh">Refresh</string>
+
+    <string name="close_interface">Close Interface</string>
+    <string name="api_ver">API VER</string>
+    <string name="interface_status">Interface:</string>
+    <string name="socket_status">Socket:</string>
+    <string name="baud_rate">Baudrate:</string>
+    <string name="transmit_can">Transmit CAN  Message</string>
+    <string name="transmit_j1708">Transmit J1708 Message</string>
+    <string name="_000k_desc">000 kbit/s</string>
+    <string name="_500k_desc">500 kbit/s</string>
+    <string name="_250k_desc">250 kbit/s</string>
+    <string name="_500k">500K</string>
+    <string name="_250k">250K</string>
+    <string name="silent_mode">Listen only</string>
+    <string name="filters">Filters</string>
+    <string name="discard">Discard incoming packets on baud switch</string>
+    <string name="get_baudrate">Get Baudrate</string>
+    <string name="j1939_send_interval">J1939 Cycle Time (0-1000ms)</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="cycle_transmit">Cycle Transmit</string>
+
+    <string name="lbl_j1939">J1939 Frames/Bytes: 0/0</string>
+    <string name="lbl_j1708">J1708 Frames/Bytes: 0/0</string>
+    <string name="can1">CAN1</string>
+    <string name="can2">Time (ms), Identifier, Format, PGN, Data, Length</string>
+    <string name="j1708">J1708</string>
+    <string name="j17082">Time (ms), Identifier, Priority, Data, Length</string>
+    <string name="block_on_read">Block On Read</string>
+    <string name="start_on_boot">Start On Boot</string>
+
 </resources>

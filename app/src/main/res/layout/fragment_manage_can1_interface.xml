@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="75dp">
+
+    <TextView
+      android:id="@+id/textViewManageInterface"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:isScrollContainer="true"
+      android:text="Manage Interface"
+      android:textColor="@color/colorPrimary"
+      android:textSize="14sp"/>
+
+    <View
+      android:id="@+id/xAxis"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"/>
+
+    <View
+      android:id="@+id/yAxis"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"/>
+
+
+    <Button
+      android:id="@+id/buttonOpenCan1"
+      android:layout_width="wrap_content"
+      android:layout_height="24dp"
+      android:layout_marginTop="32dp"
+      android:layout_alignParentTop="true"
+      android:background="@color/colorButtons"
+      android:text="Create CAN Interface"
+      android:textSize="8sp"/>
+
+    <Button
+      android:id="@+id/buttonCloseCan1"
+      android:layout_width="wrap_content"
+      android:layout_height="24dp"
+      android:layout_marginTop="32dp"
+      android:layout_alignLeft="@+id/yAxis"
+      android:background="@color/colorButtons"
+      android:text="Close CAN Interface"
+      android:textSize="8sp"/>
+
+
+  </RelativeLayout>
+
+
+</RelativeLayout>

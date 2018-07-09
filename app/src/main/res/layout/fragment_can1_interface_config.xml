@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="158dp">
+
+        <View
+          android:id="@+id/xAxis"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"/>
+
+        <View
+          android:id="@+id/yAxis"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"/>
+
+        <TextView
+          android:id="@+id/textViewCan1ConfigInter"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentTop="true"
+          android:text="Configure Interface"
+          android:textColor="@color/colorPrimary"
+          android:textSize="14sp"/>
+        <TextView
+          android:id="@+id/lblCan1ViewBaud"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="25dp"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentTop="false"
+          android:paddingTop="10dp"
+          android:text="CAN Baud Rate: "
+          android:textAllCaps="false"
+          android:textSize="10sp"/>
+
+        <RadioGroup
+          android:id="@+id/radioGrCan1BaudRates"
+          android:layout_width="150dp"
+          android:layout_height="wrap_content"
+          android:layout_alignStart="@+id/yAxis"
+          android:layout_alignTop="@+id/lblCan1ViewBaud"
+          android:orientation="horizontal">
+
+            <RadioButton
+              android:id="@+id/radio250K"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:checked="true"
+              android:text="@string/_250k"
+              android:textColor="@android:color/holo_orange_dark"
+              android:textSize="8sp"/>
+
+            <RadioButton
+              android:id="@+id/radio500K"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:text="@string/_500k"
+              android:textColor="@android:color/holo_orange_dark"
+              android:textSize="8sp"/>
+        </RadioGroup>
+        <TextView
+          android:id="@+id/textViewCan1Silent"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/toggleButtonCan1Listen"
+          android:layout_alignParentStart="true"
+          android:text="Listening Mode: "
+          android:textSize="10sp"/>
+        <ToggleButton
+          android:id="@+id/toggleButtonCan1Listen"
+          android:layout_width="78dp"
+          android:layout_height="29dp"
+          android:layout_marginTop="4dp"
+          android:layout_below="@+id/radioGrCan1BaudRates"
+          android:layout_alignLeft="@+id/yAxis"
+          android:text="ToggleButton"
+          android:textColorLink="@android:color/holo_green_light"
+          android:textSize="8sp"/>
+
+        <TextView
+          android:id="@+id/textViewCan1Term"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/toggleButtonCan1Term"
+          android:layout_alignParentStart="true"
+          android:text="Termination: "
+          android:textSize="10sp"/>
+        <ToggleButton
+          android:id="@+id/toggleButtonCan1Term"
+          android:layout_width="79dp"
+          android:layout_height="28dp"
+          android:layout_marginTop="4dp"
+          android:layout_alignStart="@+id/radioGrCan1BaudRates"
+          android:layout_alignLeft="@+id/textViewCan2Term"
+          android:layout_below="@+id/toggleButtonCan1Listen"
+          android:text="ToggleButton"
+          android:textSize="8sp"/>
+
+        <TextView
+          android:id="@+id/textViewCan1ConfigFilters"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignBottom="@+id/toggleButtonCan1Filters"
+          android:layout_alignParentBottom="false"
+          android:layout_alignParentStart="true"
+          android:text="Configure Pre-set Filters:  "
+          android:textSize="10sp"/>
+
+        <ToggleButton
+          android:id="@+id/toggleButtonCan1Filters"
+          android:layout_width="78dp"
+          android:layout_height="28dp"
+          android:layout_alignStart="@+id/radioGrCan1BaudRates"
+          android:layout_below="@+id/toggleButtonCan1Term"
+          android:text="ToggleButton"
+          android:textSize="8sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
