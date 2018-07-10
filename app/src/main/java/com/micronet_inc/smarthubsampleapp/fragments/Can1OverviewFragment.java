@@ -390,7 +390,7 @@ public class Can1OverviewFragment extends Fragment {
             this.termination=termination;
             this.port=port;
             this.removeInterface=canTest.getRemoveCan1InterfaceState();
-			this.filtersEnabled = filtersEnabled;
+            this.filtersEnabled = filtersEnabled;
             this.flowControlEnabled = flowControlEnabled;
         }
 

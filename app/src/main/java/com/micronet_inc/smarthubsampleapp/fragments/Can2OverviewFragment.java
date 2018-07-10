@@ -388,7 +388,7 @@ public class Can2OverviewFragment extends Fragment {
             this.termination=termination;
             this.port=port;
             this.removeInterface=canTest.getRemoveCan2InterfaceState();
-			this.filtersEnabled = filtersEnabled;
+            this.filtersEnabled = filtersEnabled;
             this.flowControlEnabled = flowControlEnabled;
         }
 
