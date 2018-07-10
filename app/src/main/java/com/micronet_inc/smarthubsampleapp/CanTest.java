@@ -299,11 +299,13 @@ public class CanTest {
         return txtTransmissionGear;
     }
 
-    public int CreateCanInterface1(boolean silentMode, int baudrate, boolean termination, int port) {
+    public int CreateCanInterface1(boolean silentMode, int baudrate, boolean termination, int port, boolean enableFilters, boolean enableFlowControl) {
         this.silentMode = silentMode;
         this.baudrate = baudrate;
         this.termination=termination;
         this.portNumber=port;
+		this.enableFilters = enableFilters;
+        this.enableFlowControl = enableFlowControl;
 
         if (canbusInterface1 == null) {
             canbusInterface1 = new CanbusInterface();
@@ -333,11 +335,13 @@ public class CanTest {
         return 0;
     }
 
-    public int CreateCanInterface2(boolean silentMode, int baudrate, boolean termination, int port) {
+    public int CreateCanInterface2(boolean silentMode, int baudrate, boolean termination, int port, boolean enableFilters, boolean enableFlowControl) {
         this.silentMode = silentMode;
         this.baudrate = baudrate;
         this.termination=termination;
         this.portNumber=port;
+		this.enableFilters = enableFilters;
+        this.enableFlowControl = enableFlowControl;
 
         if (canbusInterface2 == null  ) {
             canbusInterface2 = new CanbusInterface();
@@ -383,45 +387,75 @@ public class CanTest {
     public void silentMode(boolean silentMode) {
         this.silentMode = silentMode;
     }
+public void setFiltersEnabled(boolean enableFilters){
+        this.enableFilters = enableFilters;
+    }
 
     public CanbusHardwareFilter[] setFilters() {
-        enableFilters = true;
+
         ArrayList<CanbusHardwareFilter> filterList = new ArrayList<CanbusHardwareFilter>();
         CanbusHardwareFilter[] filters;
-        // Up to 24 filters
-        int[] ids = new int[]{0x18FEE000, 0x1CECFF00 , 0x1CEBFF00, 0x18FEE500 , 0x18FEF100, J1939_ENGINE_CONTROLLER2 << 8, J1939_ENGINE_CONTROLLER1 << 8 , J1939_PGN_DASH_DISP << 8, J1939_PGN_GEAR << 8, J1939_ENGINE_TEMPERATURE_1 << 8 , J1939_FUEL_ECONOMY << 8};
-        int[] mask = {0x1FFFFFFF, 0x1FFF00FF, 0x1FFF00FF, 0x1FFFFFFF, 0x1FFFFFFF, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00};
-        int[] type={CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
-                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
-                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED};
+        int[] ids;
+        int[] mask;
+        int[] type;
+
+        if (enableFilters) {
+            // Up to 24 filters
+
+            ids = new int[]{0x18FEE000, 0x1CECFF00, 0x1CEBFF00, 0x18FEE500, 0x18FEF100,
+                J1939_ENGINE_CONTROLLER2 << 8, J1939_ENGINE_CONTROLLER1 << 8,
+                J1939_PGN_DASH_DISP << 8, J1939_PGN_GEAR << 8, J1939_ENGINE_TEMPERATURE_1 << 8,
+                J1939_FUEL_ECONOMY << 8};
+            mask = new int[]{0x1FFFFFFF, 0x1FFF00FF, 0x1FFF00FF, 0x1FFFFFFF, 0x1FFFFFFF, 0x00FFFF00,
+                0x00FFFF00, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00, 0x00FFFF00};
+            type = new int[]{CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
+
+
+                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
+                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
+                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
+                CanbusHardwareFilter.EXTENDED, CanbusHardwareFilter.EXTENDED,
+                CanbusHardwareFilter.EXTENDED};
+        }
+        else{
+            // Setting up two filters: one standard and one extended to allow all messages.
+            ids = new int[]{0x00000000, 0x00000000};
+            mask = new int[]{0x00000000, 0x00000000};
+            type = new int[]{CanbusHardwareFilter.STANDARD, CanbusHardwareFilter.EXTENDED};
+        }
         filterList.add(new CanbusHardwareFilter(ids,mask, type));
         filters = filterList.toArray(new CanbusHardwareFilter[0]);
         return filters;
     }
 
-    public CanbusFlowControl[] setFlowControlMessages(){
-
-        enableFlowControl = true;
-
-        CanbusFlowControl[] flowControlMessages = new CanbusFlowControl[8];
-
-        byte[] data1=new byte[]{0x10,0x34,0x56,0x78,0x1f,0x2f,0x3f,0x4f};
-
-        flowControlMessages[0] = new CanbusFlowControl(0x18FEE000,0x18FEE018, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[1] = new CanbusFlowControl(0x1CECFF00,0x1CECFF1C, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[2] = new CanbusFlowControl(0x18FEE300,0x18FEE318, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[3] = new CanbusFlowControl(0x18FEE400,0x18FEE418, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[4] = new CanbusFlowControl(0x18FEE500,0x18FEE518, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[5] = new CanbusFlowControl(0x1CECEE00,0x1CECEE1C, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[6] = new CanbusFlowControl(0x1CECCC00,0x1CECCC00, CanbusFlowControl.EXTENDED,8,data1);
-        flowControlMessages[7] = new CanbusFlowControl(0x1CECAA00,0x1CECAA00, CanbusFlowControl.EXTENDED,8,data1);
-        return flowControlMessages;
+    public void setFlowControlEnabled(boolean enableFlowControl){
+        this.enableFlowControl = enableFlowControl;
     }
 
+    public CanbusFlowControl[] setFlowControlMessages(){
+        if (enableFlowControl){
+            CanbusFlowControl[] flowControlMessages = new CanbusFlowControl[8];
+
+            byte[] data1=new byte[]{0x10,0x34,0x56,0x78,0x1f,0x2f,0x3f,0x4f};
+
+            flowControlMessages[0] = new CanbusFlowControl(0x18FEE000,0x18FEE018,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[1] = new CanbusFlowControl(0x1CECFF00,0x1CECFF1C,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[2] = new CanbusFlowControl(0x18FEE300,0x18FEE318,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[3] = new CanbusFlowControl(0x18FEE400,0x18FEE418,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[4] = new CanbusFlowControl(0x18FEE500,0x18FEE518,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[5] = new CanbusFlowControl(0x1CECEE00,0x1CECEE1C,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[6] = new CanbusFlowControl(0x1CECCC00,0x1CECCC00,CanbusFlowControl.EXTENDED,8,data1);
+            flowControlMessages[7] = new CanbusFlowControl(0x1CECAA00,0x1CECAA00,CanbusFlowControl.EXTENDED,8,data1);
+            return flowControlMessages;
+        }
+        else{
+            return null;
+        }
+    }
     public void clearFilters() {
         // re-init the interface to clear filters
         enableFilters = false;
-        CreateCanInterface1(silentMode, baudrate, termination, portNumber);
+        CreateCanInterface1(silentMode, baudrate, termination, portNumber,enableFilters, enableFlowControl);
     }
 
     public void requestPgn(int portNumber, int requestedPgn, int toAddress, CanbusFrameType type){

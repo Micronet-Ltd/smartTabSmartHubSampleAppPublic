@@ -13,3 +13,9 @@ gradlew.bat
 #micronet files
 treqr5platformkey.properties
 micronet-treqr5-platform.keystore
+
+/.idea/caches/
+/.idea/runConfigurations.xml
+/app/gradle/
+/app/local.properties
+
