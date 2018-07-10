@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.e(TAG, "Configuration changed: " + newConfig.toString());
+        Log.d(TAG, "Configuration changed: " + newConfig.toString());
     }
 
     private void setupViewPager(ViewPager viewPager) {
