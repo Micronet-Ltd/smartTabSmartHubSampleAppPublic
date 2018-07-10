@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent" android:layout_height="match_parent">
 
     <RelativeLayout
       android:layout_width="wrap_content"
-      android:layout_height="158dp">
+      android:layout_height="179dp"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true">
 
         <View
           android:id="@+id/xAxis"
@@ -73,8 +75,8 @@
           android:id="@+id/textViewCan1Silent"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignBottom="@+id/toggleButtonCan1Listen"
           android:layout_alignParentStart="true"
+          android:layout_alignTop="@+id/toggleButtonCan1Listen"
           android:text="Listening Mode: "
           android:textSize="10sp"/>
         <ToggleButton
@@ -82,8 +84,8 @@
           android:layout_width="78dp"
           android:layout_height="29dp"
           android:layout_marginTop="4dp"
-          android:layout_below="@+id/radioGrCan1BaudRates"
           android:layout_alignLeft="@+id/yAxis"
+          android:layout_below="@+id/radioGrCan1BaudRates"
           android:text="ToggleButton"
           android:textColorLink="@android:color/holo_green_light"
           android:textSize="8sp"/>
@@ -92,8 +94,8 @@
           android:id="@+id/textViewCan1Term"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignBottom="@+id/toggleButtonCan1Term"
           android:layout_alignParentStart="true"
+          android:layout_alignTop="@+id/toggleButtonCan1Term"
           android:text="Termination: "
           android:textSize="10sp"/>
         <ToggleButton
@@ -101,8 +103,8 @@
           android:layout_width="79dp"
           android:layout_height="28dp"
           android:layout_marginTop="4dp"
-          android:layout_alignStart="@+id/radioGrCan1BaudRates"
           android:layout_alignLeft="@+id/textViewCan2Term"
+          android:layout_alignStart="@+id/radioGrCan1BaudRates"
           android:layout_below="@+id/toggleButtonCan1Listen"
           android:text="ToggleButton"
           android:textSize="8sp"/>
@@ -111,9 +113,8 @@
           android:id="@+id/textViewCan1ConfigFilters"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignBottom="@+id/toggleButtonCan1Filters"
-          android:layout_alignParentBottom="false"
           android:layout_alignParentStart="true"
+          android:layout_below="@+id/toggleButtonCan1Term"
           android:text="Configure Pre-set Filters:  "
           android:textSize="10sp"/>
 
@@ -123,6 +124,24 @@
           android:layout_height="28dp"
           android:layout_alignStart="@+id/radioGrCan1BaudRates"
           android:layout_below="@+id/toggleButtonCan1Term"
+          android:text="ToggleButton"
+          android:textSize="8sp"/>
+
+        <TextView
+          android:id="@+id/textViewCan1ConfigFlowControl"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_below="@+id/toggleButtonCan1Filters"
+          android:text="Configure Flow Control:  "
+          android:textSize="10sp"/>
+
+        <ToggleButton
+          android:id="@+id/toggleButtonCan1FlowControl"
+          android:layout_width="78dp"
+          android:layout_height="28dp"
+          android:layout_alignStart="@+id/radioGrCan1BaudRates"
+          android:layout_below="@+id/toggleButtonCan1Filters"
           android:text="ToggleButton"
           android:textSize="8sp"/>
 
