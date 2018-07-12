@@ -60,15 +60,24 @@
             android:textColor="@android:color/black"
             android:textSize="10sp"/>
         <SeekBar
-            android:id="@+id/seekBarCan2SendSpeed"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_alignLeft="@+id/yAxis"
-            android:layout_below="@+id/swCan2CycleTransmitJ1939"
-            android:max="1000"
-            android:maxHeight="5dip"
-            android:minHeight="5dip"/>
+          android:id="@+id/seekBarCan2SendSpeed"
+          android:layout_width="162dp"
+          android:layout_height="wrap_content"
+          android:layout_alignStart="@+id/yAxis"
+          android:layout_centerVertical="true"
+          android:max="1000"
+          android:maxHeight="5dip"
+          android:minHeight="5dip"/>
+
+        <TextView
+          android:id="@+id/textViewCan2FramesTx"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="3dp"
+          android:layout_alignLeft="@+id/xAxis"
+          android:layout_below="@+id/seekBarCan2SendSpeed"
+          android:text="Tx 0 Frames/0 Bytes"
+          android:textSize="10sp"/>
 
         <Button
             android:id="@+id/btnCan2SendJ1939"

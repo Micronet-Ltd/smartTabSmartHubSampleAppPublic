@@ -23,7 +23,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import com.micronet.canbus.Info;
 import com.micronet_inc.smarthubsampleapp.CanTest;
 import com.micronet_inc.smarthubsampleapp.R;
 import java.util.Calendar;
@@ -51,7 +50,8 @@ public class Can1OverviewFragment extends Fragment {
     private TextView txtCanTxSpeedCan1;
     private TextView txtCanBaudRateCan1;
 
-    private TextView textViewFrames;
+    private TextView textViewFramesRx;
+    private TextView textViewFramesTx;
 
     // Socket dependent UI
     private Button btnTransmitCAN1;
@@ -113,6 +113,20 @@ public class Can1OverviewFragment extends Fragment {
 
     }
 
+    private void setDockStateDependentUI(){
+        boolean uiElementEnabled = true;
+        if (mDockState == Intent.EXTRA_DOCK_STATE_UNDOCKED){
+            uiElementEnabled = false;
+        }
+        toggleButtonTermCan1.setEnabled(uiElementEnabled);
+        toggleButtonListenCan1.setEnabled(uiElementEnabled);
+        baudRateCan1.setEnabled(uiElementEnabled);
+        toggleButtonFilterSetCan1.setEnabled(uiElementEnabled);
+        toggleButtonFlowControlCan1.setEnabled(uiElementEnabled);
+        openCan1.setEnabled(uiElementEnabled);
+        closeCan1.setEnabled(uiElementEnabled);
+    }
+
     private void updateInterfaceStatusUI(String status) {
         final TextView txtInterfaceStatus = getView().findViewById(R.id.textCan1InterfaceStatus);
         if(status != null) {
@@ -149,7 +163,8 @@ public class Can1OverviewFragment extends Fragment {
 
         final View rootView = getView();
 
-        textViewFrames = rootView.findViewById(R.id.textViewCan1Frames);
+        textViewFramesRx = rootView.findViewById(R.id.textViewCan1FramesRx);
+        textViewFramesTx = rootView.findViewById(R.id.textViewCan1FramesTx);
 
         baudRateCan1 = rootView.findViewById(R.id.radioGrCan1BaudRates);
         toggleButtonListenCan1 = rootView.findViewById(R.id.toggleButtonCan1Listen);
@@ -267,6 +282,7 @@ public class Can1OverviewFragment extends Fragment {
         updateInterfaceStatusUI();
         setStateInterfaceDependentUI();
         setStateSocketDependentUI();
+        setDockStateDependentUI();
     }
 
     private void openCan1Interface(){
@@ -307,11 +323,25 @@ public class Can1OverviewFragment extends Fragment {
 
     private void updateCountUI() {
         if (canTest != null){
-            String s = "J1939 Frames/Bytes: " + canTest.getPort1CanbusFrameCount() + "/" + canTest.getPort1CanbusByteCount();
+            String s1 = canTest.getPort1CanbusRxFrameCount() + " Frames / " + canTest.getPort1CanbusRxByteCount() + " Bytes";
             swCycleTransmitJ1939Can1.setChecked(canTest.isAutoSendJ1939Port1());
-            textViewFrames.setText(s);
-        }
+            textViewFramesRx.setText(s1);
+            if (canTest.getPort1CanbusRxFrameCount() == 0){
+                textViewFramesRx.setBackgroundColor(Color.WHITE);
+            }
+            else{
+                textViewFramesRx.setBackgroundColor(Color.GREEN);
+            }
 
+            String s2 = "Tx: " + canTest.getPort1CanbusTxFrameCount() + " Frames / " + canTest.getPort1CanbusTxByteCount() + " Bytes";
+            textViewFramesTx.setText(s2);
+            if (canTest.getPort1CanbusTxFrameCount() == 0) {
+                textViewFramesTx.setBackgroundColor(Color.WHITE);
+            }
+            else{
+                textViewFramesTx.setBackgroundColor(Color.GREEN);
+            }
+        }
     }
 
     private void updateBaudRateUI() {
@@ -426,6 +456,7 @@ public class Can1OverviewFragment extends Fragment {
             updateInterfaceStatusUI(params[0]);
             setStateSocketDependentUI();
             setStateInterfaceDependentUI();
+            setDockStateDependentUI();
         }
 
         protected void onPostExecute(Void result) {
@@ -435,6 +466,7 @@ public class Can1OverviewFragment extends Fragment {
             updateInterfaceStatusUI();
             setStateInterfaceDependentUI();
             setStateSocketDependentUI();
+            setDockStateDependentUI();
         }
     }
 

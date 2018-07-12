@@ -131,10 +131,10 @@ public class CanTest {
     private int j1708IntervalDelay = 500; // ms
 
     private Thread j1939Port1ReaderThread = null;
-    private Thread j1939Port1SendThread = null;
+    private Thread j1939Port1WriterThread = null;
 
     private Thread j1939Port2ReaderThread = null;
-    private Thread j1939Port2SendThread = null;
+    private Thread j1939Port2WriterThread = null;
 
     private Thread j1708ReaderThread = null;
     private Thread j1708SendThread = null;
@@ -142,6 +142,8 @@ public class CanTest {
 
     private J1939Port1Reader j1939Port1Reader = null;
     private J1939Port2Reader j1939Port2Reader = null;
+    private J1939Port1Writer j1939Port1Writer = null;
+    private J1939Port2Writer j1939Port2Writer = null;
     private J1708Reader j1708Reader = null;
 
     private volatile boolean blockOnReadPort1 = false;
@@ -636,10 +638,9 @@ public void setFiltersEnabled(boolean enableFilters){
 
         if (j1939Port2ReaderThread == null || j1939Port2ReaderThread.getState() != Thread.State.NEW) {
             j1939Port2ReaderThread = new Thread(j1939Port2Reader);
+            //j1939Port2ReaderThread.setPriority(Thread.NORM_PRIORITY + 3);
+            j1939Port2ReaderThread.start();
         }
-
-        //j1939Port2ReaderThread.setPriority(Thread.NORM_PRIORITY + 3);
-        j1939Port2ReaderThread.start();
     }
 
     private void startJ1708Threads() {
@@ -653,8 +654,8 @@ public void setFiltersEnabled(boolean enableFilters){
 
         if (j1708ReaderThread == null || j1708ReaderThread.getState() != Thread.State.NEW) {
             j1708ReaderThread = new Thread(j1708Reader);
+            j1708ReaderThread.start();
         }
-        j1708ReaderThread.start();
     }
 
     public void closeCan1Interface() {
@@ -695,10 +696,21 @@ public void setFiltersEnabled(boolean enableFilters){
             if (j1939Port1ReaderThread != null && j1939Port1ReaderThread.isAlive()) {
                 j1939Port1ReaderThread.interrupt();
                 try {
-                    j1939Port1ReaderThread.join();
+                    j1939Port1ReaderThread.join(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            if (j1939Port1WriterThread != null && j1939Port1WriterThread.isAlive()) {
+                j1939Port1WriterThread.interrupt();
+                try {
+                    j1939Port1WriterThread.join(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (j1939Port1Writer != null){
+                j1939Port1Writer.clearCounts();
             }
         }
 
@@ -712,10 +724,21 @@ public void setFiltersEnabled(boolean enableFilters){
             if (j1939Port2ReaderThread != null && j1939Port2ReaderThread.isAlive()) {
                 j1939Port2ReaderThread.interrupt();
                 try {
-                    j1939Port2ReaderThread.join();
+                    j1939Port2ReaderThread.join(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            if (j1939Port2WriterThread != null && j1939Port2WriterThread.isAlive()) {
+                j1939Port2WriterThread.interrupt();
+                try {
+                    j1939Port2WriterThread.join(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (j1939Port2Writer != null){
+                j1939Port2Writer.clearCounts();
             }
         }
     }
@@ -739,13 +762,13 @@ public void setFiltersEnabled(boolean enableFilters){
     }
 
     /// J1939 Canbus Reader
-    public int getPort1CanbusFrameCount() {
+    public int getPort1CanbusRxFrameCount() {
         if (j1939Port1Reader == null)
             return 0;
         return j1939Port1Reader.getCanbusFrameCount();
     }
 
-    public int getPort1CanbusByteCount() {
+    public int getPort1CanbusRxByteCount() {
         if (j1939Port1Reader == null)
             return 0;
         return j1939Port1Reader.getCanbusByteCount();
@@ -760,9 +783,9 @@ public void setFiltersEnabled(boolean enableFilters){
         return j1939Port1Reader.getMaxdiff();
     }
 
-    public int getPort2CanbusFrameCount() {return j1939Port2Reader.getCanbusFrameCount();}
+    public int getPort2CanbusRxFrameCount() {return j1939Port2Reader.getCanbusFrameCount();}
 
-    public int getPort2CanbusByteCount() {
+    public int getPort2CanbusRxByteCount() {
         return j1939Port2Reader.getCanbusByteCount();
     }
 
@@ -772,6 +795,34 @@ public void setFiltersEnabled(boolean enableFilters){
 
     public int getPort2CanbusMaxdiff() {
         return j1939Port2Reader.getMaxdiff();
+    }
+
+    public int getPort1CanbusTxFrameCount(){
+        if (j1939Port1Writer == null){
+            return 0;
+        }
+        return j1939Port1Writer.getFrameCount();
+    }
+
+    public int getPort1CanbusTxByteCount(){
+        if (j1939Port1Writer == null){
+            return 0;
+        }
+        return j1939Port1Writer.getByteCount();
+    }
+
+    public int getPort2CanbusTxFrameCount(){
+        if (j1939Port2Writer == null){
+            return 0;
+        }
+        return j1939Port2Writer.getFrameCount();
+    }
+
+    public int getPort2CanbusTxByteCount(){
+        if (j1939Port2Writer == null){
+            return 0;
+        }
+        return j1939Port2Writer.getByteCount();
     }
 
     public boolean isAutoSendJ1939Port1() {
@@ -1425,9 +1476,12 @@ public void setFiltersEnabled(boolean enableFilters){
         return new String(hexChars);
     }
     public void sendJ1939Port1() {
-        if (j1939Port1SendThread == null || !j1939Port1SendThread.isAlive()) {
-            j1939Port1SendThread = new Thread(sendJ1939Port1Runnable);
-            j1939Port1SendThread.start();
+        if (j1939Port1Writer == null){
+            j1939Port1Writer = new J1939Port1Writer();
+        }
+        if (j1939Port1WriterThread == null || !j1939Port1WriterThread.isAlive()) {
+            j1939Port1WriterThread = new Thread(j1939Port1Writer);
+            j1939Port1WriterThread.start();
         }
     }
 
@@ -1449,13 +1503,29 @@ public void setFiltersEnabled(boolean enableFilters){
             canMessageTypePort1 = CanbusFrameType.STANDARD_REMOTE;
         }
 
-        if (j1939Port1SendThread == null || !j1939Port1SendThread.isAlive()) {
-            j1939Port1SendThread = new Thread(sendJ1939Port1Runnablle);
-            j1939Port1SendThread.start();
+        if (j1939Port1WriterThread == null || !j1939Port1WriterThread.isAlive()) {
+            j1939Port1WriterThread = new Thread(sendJ1939Port1Runnable2);
+            j1939Port1WriterThread.start();
         }
     }
 
-    private Runnable sendJ1939Port1Runnable = new Runnable() {
+    private class J1939Port1Writer implements Runnable{
+        private int sentFrameCount = 0;
+        private int sentByteCount = 0;
+
+        public void clearCounts(){
+            this.sentByteCount = 0;
+            this.sentFrameCount = 0;
+        }
+
+        private int getFrameCount(){
+            return sentFrameCount;
+        }
+
+        private int getByteCount(){
+            return sentByteCount;
+        }
+
         @Override
         public void run() {
             CanbusFrameType MessageType;
@@ -1481,7 +1551,60 @@ public void setFiltersEnabled(boolean enableFilters){
                 MessageData=a;
 
                 if(canbusSocket1 != null) {
-                    canbusSocket1.write1939Port1(new CanbusFramePort1(MessageId, MessageData,MessageType));
+                    CanbusFramePort1 canFrame = new CanbusFramePort1(MessageId, MessageData,MessageType);
+                    canbusSocket1.write1939Port1(canFrame);
+                    sentByteCount += canFrame.getData().length;
+                    sentFrameCount++;
+                }
+                try {
+                    sleep(j1939IntervalDelay);
+                } catch (InterruptedException e) {
+                }
+            } while (autoSendJ1939Port1);
+        }
+    }
+
+    private Runnable sendJ1939Port1Runnable1 = new Runnable() {
+        private int sentFrameCount = 0;
+        private int sentByteCount = 0;
+
+        public int getFrameCount(){
+            return sentFrameCount;
+        }
+
+        public int getSentByteCount(){
+            return sentByteCount;
+        }
+
+        @Override
+        public void run() {
+            CanbusFrameType MessageType;
+            int MessageId;
+            byte[] MessageData;
+            do {
+
+                MessageType= CanbusFrameType.EXTENDED;
+                MessageId=J1939_FUEL_ECONOMY;
+                int data = 0;
+                ByteBuffer dbuf = ByteBuffer.allocate(8);
+                dbuf.order(ByteOrder.LITTLE_ENDIAN);
+                dbuf.putInt(data++);
+                byte[] a = dbuf.array();
+                a[0] = 0x12;
+                a[1] = 0x34;
+                a[2] = 0x45;
+                a[3] = 0x67;
+                a[4] = 0x1F;
+                a[5] = 0x2F;
+                a[6] = 0x3F;
+                a[7] = 0x4F;
+                MessageData=a;
+
+                if(canbusSocket1 != null) {
+                    CanbusFramePort1 canFrame = new CanbusFramePort1(MessageId, MessageData,MessageType);
+                    canbusSocket1.write1939Port1(canFrame);
+                    sentByteCount += canFrame.getData().length;
+                    sentFrameCount++;
                 }
                 try {
                     sleep(j1939IntervalDelay);
@@ -1491,7 +1614,7 @@ public void setFiltersEnabled(boolean enableFilters){
         }
     };
 
-    private Runnable sendJ1939Port1Runnablle = new Runnable() {
+    private Runnable sendJ1939Port1Runnable2 = new Runnable() {
         @Override
         public void run() {
             do {
@@ -1506,10 +1629,69 @@ public void setFiltersEnabled(boolean enableFilters){
         }
     };
 
+    private class J1939Port2Writer implements Runnable{
+        private int sentFrameCount = 0;
+        private int sentByteCount = 0;
+
+        public void clearCounts(){
+            this.sentByteCount = 0;
+            this.sentFrameCount = 0;
+        }
+
+        private int getFrameCount(){
+            return sentFrameCount;
+        }
+
+        private int getByteCount(){
+            return sentByteCount;
+        }
+
+        @Override
+        public void run() {
+            CanbusFrameType MessageType;
+            int MessageId;
+            byte[] MessageData;
+            do {
+
+                MessageType= CanbusFrameType.EXTENDED;
+                MessageId=J1939_FUEL_ECONOMY;
+                int data = 0;
+                ByteBuffer dbuf = ByteBuffer.allocate(8);
+                dbuf.order(ByteOrder.LITTLE_ENDIAN);
+                dbuf.putInt(data++);
+                byte[] a = dbuf.array();
+                a[0] = 0x12;
+                a[1] = 0x34;
+                a[2] = 0x45;
+                a[3] = 0x67;
+                a[4] = 0x1F;
+                a[5] = 0x2F;
+                a[6] = 0x3F;
+                a[7] = 0x4F;
+                MessageData=a;
+
+                if(canbusSocket2 != null) {
+                    CanbusFramePort2 canFrame = new CanbusFramePort2(MessageId, MessageData,MessageType);
+                    canbusSocket2.write1939Port2(canFrame);
+                    sentByteCount += canFrame.getData().length;
+                    sentFrameCount++;
+                }
+                try {
+                    sleep(j1939IntervalDelay);
+                } catch (InterruptedException e) {
+                }
+            } while (autoSendJ1939Port2);
+        }
+    }
+
+
     public void sendJ1939Port2() {
-        if (j1939Port2SendThread == null || !j1939Port2SendThread.isAlive()) {
-            j1939Port2SendThread = new Thread(sendJ1939Port2Runnable);
-            j1939Port2SendThread.start();
+        if (j1939Port2Writer == null){
+            j1939Port2Writer = new J1939Port2Writer();
+        }
+        if (j1939Port2WriterThread == null || !j1939Port2WriterThread.isAlive()) {
+            j1939Port2WriterThread = new Thread(j1939Port2Writer);
+            j1939Port2WriterThread.start();
         }
     }
 
@@ -1531,13 +1713,24 @@ public void setFiltersEnabled(boolean enableFilters){
             canMessageTypePort2 = CanbusFrameType.STANDARD_REMOTE;
         }
 
-        if (j1939Port2SendThread == null || !j1939Port2SendThread.isAlive()) {
-            j1939Port2SendThread = new Thread(sendJ1939Port2Runnablle);
-            j1939Port2SendThread.start();
+        if (j1939Port2WriterThread == null || !j1939Port2WriterThread.isAlive()) {
+            j1939Port2WriterThread = new Thread(sendJ1939Port2Runnable2);
+            j1939Port2WriterThread.start();
         }
     }
 
-    private Runnable sendJ1939Port2Runnable = new Runnable() {
+    private Runnable sendJ1939Port2Runnable1 = new Runnable() {
+        private int sentFrameCount = 0;
+        private int sentByteCount = 0;
+
+        public int getFrameCount(){
+            return sentFrameCount;
+        }
+
+        public int getSentByteCount(){
+            return sentByteCount;
+        }
+
         @Override
         public void run() {
             CanbusFrameType MessageType;
@@ -1563,7 +1756,10 @@ public void setFiltersEnabled(boolean enableFilters){
                 a[7] = 0x4F;
                 MessageData=a;
                 if(canbusSocket2 != null) {
-                    canbusSocket2.write1939Port2(new CanbusFramePort2(MessageId, MessageData,MessageType));
+                    CanbusFramePort2 canFrame = new CanbusFramePort2(MessageId, MessageData,MessageType);
+                    canbusSocket2.write1939Port2(canFrame);
+                    sentByteCount += canFrame.getData().length;
+                    sentFrameCount++;
                 }
                 try {
                     sleep(j1939IntervalDelay);
@@ -1573,7 +1769,7 @@ public void setFiltersEnabled(boolean enableFilters){
         }
     };
 
-    private Runnable sendJ1939Port2Runnablle = new Runnable() {
+    private Runnable sendJ1939Port2Runnable2 = new Runnable() {
         @Override
         public void run() {
             do {
