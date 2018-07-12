@@ -37,7 +37,7 @@
     <string name="closed">Closed</string>
     <string name="cycle_transmit">Cycle Transmit</string>
 
-    <string name="lbl_j1939">J1939 Frames/Bytes: 0/0</string>
+    <string name="lbl_j1939">0 Frames/0 Bytes</string>
     <string name="lbl_j1708">J1708 Frames/Bytes: 0/0</string>
     <string name="can1">CAN1</string>
     <string name="can2">Time (ms), Identifier, Format, PGN, Data, Length</string>

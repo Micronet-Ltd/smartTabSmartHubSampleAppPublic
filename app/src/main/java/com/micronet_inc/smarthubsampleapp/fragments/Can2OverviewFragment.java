@@ -50,7 +50,8 @@ public class Can2OverviewFragment extends Fragment {
     private TextView txtCanTxSpeedCan2;
     private TextView txtCanBaudRateCan2;
 
-    private TextView textViewFrames;
+    private TextView textViewFramesRx;
+    private TextView textViewFramesTx;
 
     // Socket dependent UI
     private Button btnTransmitCan2;
@@ -112,6 +113,20 @@ public class Can2OverviewFragment extends Fragment {
 
     }
 
+    private void setDockStateDependentUI(){
+        boolean uiElementEnabled = true;
+        if (mDockState == Intent.EXTRA_DOCK_STATE_UNDOCKED){
+            uiElementEnabled = false;
+        }
+        toggleButtonTermCan2.setEnabled(uiElementEnabled);
+        toggleButtonListenCan2.setEnabled(uiElementEnabled);
+        baudRateCan2.setEnabled(uiElementEnabled);
+        toggleButtonFilterSetCan2.setEnabled(uiElementEnabled);
+        toggleButtonFlowControlCan2.setEnabled(uiElementEnabled);
+        openCan2.setEnabled(uiElementEnabled);
+        closeCan2.setEnabled(uiElementEnabled);
+    }
+
     private void updateInterfaceStatusUI(String status) {
         final TextView txtInterfaceStatus = getView().findViewById(R.id.textCan2InterfaceStatus);
         if(status != null) {
@@ -148,7 +163,8 @@ public class Can2OverviewFragment extends Fragment {
 
         final View rootView = getView();
 
-        textViewFrames = rootView.findViewById(R.id.textViewCan2Frames);
+        textViewFramesRx = rootView.findViewById(R.id.textViewCan2FramesRx);
+        textViewFramesTx = rootView.findViewById(R.id.textViewCan2FramesTx);
 
         baudRateCan2 = rootView.findViewById(R.id.radioGrCan2BaudRates);
         toggleButtonListenCan2 = rootView.findViewById(R.id.toggleButtonCan2Listen);
@@ -265,6 +281,7 @@ public class Can2OverviewFragment extends Fragment {
         updateInterfaceStatusUI();
         setStateInterfaceDependentUI();
         setStateSocketDependentUI();
+        setDockStateDependentUI();
     }
 
     private void openCan2Interface(){
@@ -305,9 +322,24 @@ public class Can2OverviewFragment extends Fragment {
 
     private void updateCountUI() {
         if (canTest != null){
-            String s = "J1939 Frames/Bytes: " + canTest.getPort2CanbusFrameCount() + "/" + canTest.getPort2CanbusByteCount();
+            String s1 = canTest.getPort2CanbusRxFrameCount() + " Frames / " + canTest.getPort2CanbusRxByteCount() + " Bytes";
             swCycleTransmitJ1939Can2.setChecked(canTest.isAutoSendJ1939Port2());
-            textViewFrames.setText(s);
+            textViewFramesRx.setText(s1);
+            if (canTest.getPort2CanbusRxFrameCount() == 0){
+                textViewFramesRx.setBackgroundColor(Color.WHITE);
+            }
+            else{
+                textViewFramesRx.setBackgroundColor(Color.GREEN);
+            }
+
+            String s2 = "Tx: " + canTest.getPort2CanbusTxFrameCount() + " Frames / " + canTest.getPort2CanbusTxByteCount() + " Bytes";
+            textViewFramesTx.setText(s2);
+            if (canTest.getPort2CanbusTxFrameCount() == 0) {
+                textViewFramesTx.setBackgroundColor(Color.WHITE);
+            }
+            else{
+                textViewFramesTx.setBackgroundColor(Color.GREEN);
+            }
         }
 
     }
@@ -424,6 +456,7 @@ public class Can2OverviewFragment extends Fragment {
             updateInterfaceStatusUI(params[0]);
             setStateSocketDependentUI();
             setStateInterfaceDependentUI();
+            setDockStateDependentUI();
         }
 
         protected void onPostExecute(Void result) {
@@ -433,6 +466,7 @@ public class Can2OverviewFragment extends Fragment {
             updateInterfaceStatusUI();
             setStateInterfaceDependentUI();
             setStateSocketDependentUI();
+            setDockStateDependentUI();
         }
     }
 
