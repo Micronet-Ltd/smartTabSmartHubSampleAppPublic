@@ -174,7 +174,7 @@ public class InputOutputsFragment extends Fragment {
         }
 
         this.dockState = MainActivity.getDockState();
-        displayCradleState();
+        updateCradleIgnState();
         startPollingThread();
     }
 
@@ -212,7 +212,7 @@ public class InputOutputsFragment extends Fragment {
                 switch (action) {
                     case "com.micronet.smarthubsampleapp.dockevent":
                         dockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
-                        displayCradleState();
+                        updateCradleIgnState();
                         Log.d(TAG, "Dock event received: " + dockState);
                         break;
                     case "com.micronet.smarthubsampleapp.portsattached":
@@ -255,7 +255,7 @@ public class InputOutputsFragment extends Fragment {
         }
     };
 
-    public void displayCradleState() {
+    public void updateCradleIgnState() {
         String cradleStateMsg, ignitionStateMsg;
         switch (dockState) {
             case Intent.EXTRA_DOCK_STATE_UNDOCKED:

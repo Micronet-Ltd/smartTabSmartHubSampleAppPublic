@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,9 +72,7 @@ public class Can1OverviewFragment extends Fragment {
     private ChangeBaudRateTask changeBaudRateTask;
 
     private int mDockState = -1;
-    private boolean reopenCANOnDockEvent = false;
-    private IntentFilter dockFilter = new IntentFilter(Intent.ACTION_DOCK_EVENT);
-    private DockStateReceiver dockStateReceiver = new DockStateReceiver();
+    private boolean reopenCANOnTtyAttachEvent = false;
 
     public Can1OverviewFragment() {
         // Required empty public constructor
@@ -88,16 +87,29 @@ public class Can1OverviewFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //mDockState = null;
-        getActivity().registerReceiver(dockStateReceiver, dockFilter);
         Log.d(TAG, "onResume");
+
+        IntentFilter filters = new IntentFilter();
+        filters.addAction("com.micronet.smarthubsampleapp.dockevent");
+        filters.addAction("com.micronet.smarthubsampleapp.portsattached");
+        filters.addAction("com.micronet.smarthubsampleapp.portsdetached");
+
+        Context context = getContext();
+        if (context != null){
+            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filters);
+        }
+
     }
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(dockStateReceiver);
         super.onPause();
         Log.d(TAG, "onPause");
+
+        Context context = getContext();
+        if (context != null) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
+        }
     }
 
     private void setStateSocketDependentUI() {
@@ -470,34 +482,52 @@ public class Can1OverviewFragment extends Fragment {
         }
     }
 
-    private class DockStateReceiver extends BroadcastReceiver {
-        private CanTest canTest;
-        public final String TAG = getClass().getSimpleName();
-        public DockStateReceiver() {
-        }
-
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mDockState = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
-            try {
-                updateCradleIgnState();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            goAsync();
+
+            String action = intent.getAction();
+
+            if (action != null) {
+                switch (action) {
+                    case "com.micronet.smarthubsampleapp.dockevent":
+                        mDockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
+                        updateCradleIgnState();
+                        Log.d(TAG, "Dock event received: " + mDockState);
+                        break;
+                    case "com.micronet.smarthubsampleapp.portsattached":
+                        if (reopenCANOnTtyAttachEvent){
+                            Log.d(TAG, "Reopening CAN1 port since the tty port attach event was received");
+                            Toast.makeText(getContext().getApplicationContext(), "Reopening CAN1 port since the tty port attach event was received",
+                                    Toast.LENGTH_SHORT).show();
+                            openCan1Interface();
+                            reopenCANOnTtyAttachEvent = false;
+                        }
+                        Log.d(TAG, "Ports attached event received");
+                        break;
+                    case "com.micronet.smarthubsampleapp.portsdetached":
+                        if (canTest.isCan1InterfaceOpen()){
+                            Log.d(TAG, "closing CAN1 port since the tty port detach event was received");
+                            Toast.makeText(getContext().getApplicationContext(), "closing CAN1 port since the tty port detach event was received",
+                                    Toast.LENGTH_SHORT).show();
+                            closeCan1Interface();
+                            reopenCANOnTtyAttachEvent = true;
+                        }
+                        Log.d(TAG, "Ports detached event received");
+                        break;
+                }
             }
         }
-    }
+    };
 
-    private void updateCradleIgnState() throws InterruptedException {
+    private void updateCradleIgnState(){
         String cradleStateMsg, ignitionStateMsg;
+        Log.d(TAG, "updateCradleIgnState() mDockState:" + mDockState);
         switch (mDockState) {
             case Intent.EXTRA_DOCK_STATE_UNDOCKED:
                 cradleStateMsg = getString(R.string.not_in_cradle_state_text);
                 ignitionStateMsg = getString(R.string.ignition_unknown_state_text);
-                if (canTest.isCan1InterfaceOpen()){
-                    Toast.makeText(getContext().getApplicationContext(), "closing CAN1 port since device was undocked", Toast.LENGTH_SHORT).show();
-                    closeCan1Interface();
-                    reopenCANOnDockEvent = true;
-                }
                 break;
             case Intent.EXTRA_DOCK_STATE_DESK:
             case Intent.EXTRA_DOCK_STATE_LE_DESK:
@@ -505,22 +535,10 @@ public class Can1OverviewFragment extends Fragment {
                 cradleStateMsg = getString(R.string.in_cradle_state_text);
                 //ignitionStateMsg = getString(R.string.ignition_off_state_text);
                 ignitionStateMsg = getString(R.string.ignition_off_state_text);
-                if (reopenCANOnDockEvent){
-                    Toast.makeText(getContext().getApplicationContext(), "Reopening CAN1 port since device was docked", Toast.LENGTH_SHORT).show();
-                    sleep(4000);
-                    openCan1Interface();
-                    reopenCANOnDockEvent = false;
-                }
                 break;
             case Intent.EXTRA_DOCK_STATE_CAR:
                 cradleStateMsg = getString(R.string.in_cradle_state_text);
                 ignitionStateMsg = getString(R.string.ignition_on_state_text);
-                if (reopenCANOnDockEvent){
-                    Toast.makeText(getContext().getApplicationContext(), "Reopening CAN1 port since device was docked", Toast.LENGTH_SHORT).show();
-                    sleep(4000);
-                    openCan1Interface();
-                    reopenCANOnDockEvent = false;
-                }
                 break;
             default:
                 /* this state indicates un-defined docking state */
@@ -534,6 +552,4 @@ public class Can1OverviewFragment extends Fragment {
         cradleStateTextview.setText(cradleStateMsg);
         ignitionStateTextview.setText(ignitionStateMsg);
     }
-
-
 }
