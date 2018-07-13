@@ -12,14 +12,45 @@ import android.util.Log;
 
 import com.micronet_inc.smarthubsampleapp.activities.MainActivity;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 
     public final String TAG = getClass().getSimpleName();
+    private static final int MICRONET_869_MCU_VID = 0x15A2;
+    private static final int MICRONET_869_MCU_PID = 0x305;
 
     public DeviceStateReceiver() {
 
+    }
+
+    private void listTtyPorts(){
+        String lsTtyResponse = "";
+        for (int portNum = 0; portNum < 5; portNum++) {
+            String cmd = "/system/bin/ls /dev/ttyACM" + portNum;
+            try {
+                Process process = Runtime.getRuntime().exec(cmd);
+                process.waitFor();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String s = null;
+                while ((s = reader.readLine()) != null) {
+                    //Log.i(TAG, "ls /dev/ttyACM"+ portNum + " = " + s);
+                    lsTtyResponse = lsTtyResponse.concat(s + "\n");
+                }
+                reader.close();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.i(TAG, "ls /dev/ttyACM* = \n" + lsTtyResponse);
     }
 
     @Override
@@ -41,7 +72,9 @@ public class DeviceStateReceiver extends BroadcastReceiver {
             localBroadcastManager.sendBroadcast(localIntent);
 
             Log.d(TAG, "Dock event received: " + dockState);
-        } else { // USB Attach Detach Event
+        } else //if ((UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) ||
+               // (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action))){ // USB Attach Detach Event
+        {
             Log.d(TAG, "USB event received: " + action);
             UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
 
@@ -55,7 +88,7 @@ public class DeviceStateReceiver extends BroadcastReceiver {
                     Log.d(TAG, "Product Name: " + device.getProductName());
 
                     // Check if tty ports are enumerated
-                    if (device.getProductId() == 773 && device.getVendorId() == 5538) {
+                    if (device.getProductId() == MICRONET_869_MCU_PID && device.getVendorId() == MICRONET_869_MCU_VID) {
                         Log.d(TAG, "Interface count: " + device.getInterfaceCount());
                         UsbInterface intf = device.getInterface(0);
                         Log.d(TAG, "Endpoint count: " + intf.getEndpointCount());
@@ -65,6 +98,7 @@ public class DeviceStateReceiver extends BroadcastReceiver {
                             break;
                         }
 
+                        listTtyPorts();
                         portsEnumerated = true;
                     }
                 }
