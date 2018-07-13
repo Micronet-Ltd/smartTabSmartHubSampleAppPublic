@@ -11,6 +11,7 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Process;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -38,13 +39,13 @@ import java.util.HashMap;
  * GPIO Fragment Class
  */
 public class InputOutputsFragment extends Fragment {
+
     private final String TAG = "SHInputOutputFragment";
-    private final long POLLING_INTERVAL_MS = 2000;
+    private static final long POLLING_INTERVAL_MS = 2000;
 
     private View rootView;
     private GpiAdcTextAdapter gpiAdcTextAdapter;
     private Handler handler = null;
-    private GridView gridview;
 
     private int dockState = -1;
 
@@ -59,45 +60,45 @@ public class InputOutputsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView =  inflater.inflate(R.layout.fragment_input_outputs_constraint, container, false);
+        rootView = inflater.inflate(R.layout.fragment_input_outputs, container, false);
 
-        gpiAdcTextAdapter = new GpiAdcTextAdapter(getContext().getApplicationContext());
+        gpiAdcTextAdapter = new GpiAdcTextAdapter(getContext());
 
-        gridview = (GridView) rootView.findViewById(R.id.gridview);
+        GridView gridview = rootView.findViewById(R.id.gridview);
         gridview.setAdapter(gpiAdcTextAdapter);
 
-        final Button btnRefresh = (Button) rootView.findViewById(R.id.btnRefresh);
+        final Button btnRefresh = rootView.findViewById(R.id.btnRefresh);
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 gpiAdcTextAdapter.populateGpisAdcs();
                 gpiAdcTextAdapter.notifyDataSetChanged();
-                Toast.makeText(getContext().getApplicationContext(), "GPIs and ADCs refreshed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "GPIs and ADCs refreshed", Toast.LENGTH_SHORT).show();
 
-                UsbManager mUsbManager = (UsbManager) getContext().getApplicationContext().getSystemService(Context.USB_SERVICE);
+                Context context = getContext();
+                if (context != null) {
+                    UsbManager mUsbManager = (UsbManager) context
+                            .getSystemService(Context.USB_SERVICE);
 
-                if(mUsbManager != null) {
-                    HashMap<String, UsbDevice> connectedDevices = mUsbManager.getDeviceList();
+                    if (mUsbManager != null) {
+                        HashMap<String, UsbDevice> connectedDevices = mUsbManager.getDeviceList();
 
-                    for (UsbDevice device : connectedDevices.values()) {
-                        Log.d(TAG, "Product Name: " + device.getProductName());
+                        for (UsbDevice device : connectedDevices.values()) {
+                            Log.d(TAG, "Product Name: " + device.getProductName());
 
-                        // Check if tty ports are enumerated
-                        if (device.getProductId() == 773 && device.getVendorId() == 5538) {
-                            Log.d(TAG, "Get interfaces: " + device.getInterfaceCount());
-                            UsbInterface intf = device.getInterface(0);
-                            if (intf == null) {
-                                Log.wtf(TAG, "No interfaces");
-                                break;
-                            }
-                            Log.d(TAG, "Endpoint count: " + intf.getEndpointCount());
-                            UsbEndpoint usbEndpoint = intf.getEndpoint(0);
-                            if (usbEndpoint == null) {
-                                Log.wtf(TAG, "Endpoint null");
-                                break;
+                            // Check if tty ports are enumerated
+                            if (device.getProductId() == 773 && device.getVendorId() == 5538) {
+                                Log.d(TAG, "Get interfaces: " + device.getInterfaceCount());
+                                UsbInterface intf = device.getInterface(0);
+                                Log.d(TAG, "Endpoint count: " + intf.getEndpointCount());
+                                UsbEndpoint usbEndpoint = intf.getEndpoint(0);
+                                if (usbEndpoint == null) {
+                                    Log.wtf(TAG, "Endpoint null");
+                                    break;
+                                }
                             }
                         }
                     }
@@ -105,51 +106,51 @@ public class InputOutputsFragment extends Fragment {
             }
         });
 
-        final ToggleButton btnOutput1 = (ToggleButton) rootView.findViewById(R.id.toggleButtonOutput1);
+        final ToggleButton btnOutput1 = rootView.findViewById(R.id.toggleButtonOutput1);
         btnOutput1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(btnOutput1.isChecked()){
-//                    changeOutputState(1, true);
-//                }else{
-//                    changeOutputState(1, false);
-//                }
+                if (btnOutput1.isChecked()) {
+                    changeOutputState(1, true);
+                } else {
+                    changeOutputState(1, false);
+                }
             }
         });
 
-        final ToggleButton btnOutput2 = (ToggleButton) rootView.findViewById(R.id.toggleButtonOutput2);
+        final ToggleButton btnOutput2 = rootView.findViewById(R.id.toggleButtonOutput2);
         btnOutput2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(btnOutput2.isChecked()){
-//                    changeOutputState(2, true);
-//                }else{
-//                    changeOutputState(2, false);
-//                }
+                if (btnOutput2.isChecked()) {
+                    changeOutputState(2, true);
+                } else {
+                    changeOutputState(2, false);
+                }
             }
         });
 
-        final ToggleButton btnOutput3 = (ToggleButton) rootView.findViewById(R.id.toggleButtonOutput3);
+        final ToggleButton btnOutput3 = rootView.findViewById(R.id.toggleButtonOutput3);
         btnOutput3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(btnOutput3.isChecked()){
-//                    changeOutputState(3, true);
-//                }else{
-//                    changeOutputState(3, false);
-//                }
+                if (btnOutput3.isChecked()) {
+                    changeOutputState(3, true);
+                } else {
+                    changeOutputState(3, false);
+                }
             }
         });
 
-        final ToggleButton btnOutput4 = (ToggleButton) rootView.findViewById(R.id.toggleButtonOutput4);
+        final ToggleButton btnOutput4 = rootView.findViewById(R.id.toggleButtonOutput4);
         btnOutput4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(btnOutput4.isChecked()){
-//                    changeOutputState(4, true);
-//                }else{
-//                    changeOutputState(4, false);
-//                }
+                if (btnOutput4.isChecked()) {
+                    changeOutputState(4, true);
+                } else {
+                    changeOutputState(4, false);
+                }
             }
         });
 
@@ -168,7 +169,7 @@ public class InputOutputsFragment extends Fragment {
         filters.addAction("com.micronet.smarthubsampleapp.portsdetached");
 
         Context context = getContext();
-        if(context != null){
+        if (context != null) {
             LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filters);
         }
 
@@ -183,12 +184,12 @@ public class InputOutputsFragment extends Fragment {
         Log.d(TAG, "onPause");
 
         Context context = getContext();
-        if(context != null){
+        if (context != null) {
             LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
         }
 
         // Stop the polling thread when the fragment is paused.
-        if(handler != null){
+        if (handler != null) {
             handler.removeCallbacks(pollingThreadRunnable);
             Log.d(TAG, "Polling thread stopped.");
         }
@@ -207,18 +208,24 @@ public class InputOutputsFragment extends Fragment {
 
             String action = intent.getAction();
 
-            if(action.equals("com.micronet.smarthubsampleapp.dockevent")){
-                dockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
-                displayCradleState();
-                Log.d(TAG, "Dock event received: " + dockState);
-            }else if(action.equals("com.micronet.smarthubsampleapp.portsattached")){
-                gpiAdcTextAdapter.populateGpisAdcs();
-                gpiAdcTextAdapter.notifyDataSetChanged();
-                Log.d(TAG, "Ports attached event received");
-            }else{ // port detached
-                gpiAdcTextAdapter.populateGpisAdcs();
-                gpiAdcTextAdapter.notifyDataSetChanged();
-                Log.d(TAG, "Ports detached event received");
+            if (action != null) {
+                switch (action) {
+                    case "com.micronet.smarthubsampleapp.dockevent":
+                        dockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
+                        displayCradleState();
+                        Log.d(TAG, "Dock event received: " + dockState);
+                        break;
+                    case "com.micronet.smarthubsampleapp.portsattached":
+                        gpiAdcTextAdapter.populateGpisAdcs();
+                        gpiAdcTextAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "Ports attached event received");
+                        break;
+                    case "com.micronet.smarthubsampleapp.portsdetached":
+                        gpiAdcTextAdapter.populateGpisAdcs();
+                        gpiAdcTextAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "Ports detached event received");
+                        break;
+                }
             }
         }
     };
@@ -240,9 +247,9 @@ public class InputOutputsFragment extends Fragment {
                 gpiAdcTextAdapter.populateGpisAdcs();
                 gpiAdcTextAdapter.notifyDataSetChanged();
                 //Toast.makeText(getContext().getApplicationContext(), "GPIs and ADCs polled", Toast.LENGTH_SHORT).show();
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
-            }finally {
+            } finally {
                 handler.postDelayed(this, POLLING_INTERVAL_MS);
             }
         }
@@ -273,24 +280,24 @@ public class InputOutputsFragment extends Fragment {
                 break;
         }
 
-        TextView cradleStateTextview = (TextView) rootView.findViewById(R.id.textViewCradleState);
-        TextView ignitionStateTextview = (TextView) rootView.findViewById(R.id.textViewIgnitionState);
+        TextView cradleStateTextview = rootView.findViewById(R.id.textViewCradleState);
+        TextView ignitionStateTextview = rootView.findViewById(R.id.textViewIgnitionState);
         cradleStateTextview.setText(cradleStateMsg);
         ignitionStateTextview.setText(ignitionStateMsg);
     }
 
-    public void changeOutputState(int i, boolean state){
+    public void changeOutputState(int i, boolean state) {
 
-        int gpioNum = 699+i;
+        int gpioNum = 699 + i;
         int gpioState = 0;
 
-        if(state){
+        if (state) {
             gpioState = 1;
         }
 
         // If GPIO hasn't already been exported then export it
-        File tempFile = new File("/sys/class/gpio/gpio"+gpioNum+"/value");
-        if(!tempFile.exists()){
+        File tempFile = new File("/sys/class/gpio/gpio" + gpioNum + "/value");
+        if (!tempFile.exists()) {
             // Export GPIO
             try {
                 File file = new File("/sys/class/gpio/export");
@@ -301,17 +308,17 @@ public class InputOutputsFragment extends Fragment {
                 fileOutputStream.flush();
                 fileOutputStream.close();
                 Log.d(TAG, "GPIO " + gpioNum + "Exported");
-            }catch (Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
         }
-
 
         // Change the state of the GPIO
         try {
             // Check to see what id the app is. Currently to run se_dom_ex you have to be shell.
             java.lang.Process processID = Runtime.getRuntime().exec("id");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(processID.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(processID.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 Log.d(TAG, line);
@@ -320,9 +327,11 @@ public class InputOutputsFragment extends Fragment {
 
             // DOESN'T WORK
             // Tried this with and without quotes and it doesn't seem to work as it does in the shell.
-            String commandsChmod[] = {"/system/bin/se_dom_ex", "\"chmod 666 /sys/class/gpio/gpio700/value\""};
+            String commandsChmod[] = {"/system/bin/se_dom_ex",
+                    "\"chmod 666 /sys/class/gpio/gpio700/value\""};
             java.lang.Process processChmod = Runtime.getRuntime().exec(commandsChmod);
-            BufferedReader bufferedReaderChmod = new BufferedReader(new InputStreamReader(processChmod.getInputStream()));
+            BufferedReader bufferedReaderChmod = new BufferedReader(
+                    new InputStreamReader(processChmod.getInputStream()));
             while ((line = bufferedReaderChmod.readLine()) != null) {
                 Log.e(TAG, line);
             }
@@ -331,9 +340,11 @@ public class InputOutputsFragment extends Fragment {
             // This command won't work for the same reason as above but also because echo doesn't seem to work
             // properly when I try to do it this way. For example, if I try echo "hello world" using this method it
             // doesn't work either.
-            String commandsEcho[] = {"/system/bin/se_dom_ex", "echo " + gpioState + "> /sys/class/gpio/gpio700/value"};
+            String commandsEcho[] = {"/system/bin/se_dom_ex",
+                    "echo " + gpioState + "> /sys/class/gpio/gpio700/value"};
             java.lang.Process processEcho = Runtime.getRuntime().exec(commandsEcho);
-            BufferedReader bufferedReaderEcho = new BufferedReader(new InputStreamReader(processEcho.getInputStream()));
+            BufferedReader bufferedReaderEcho = new BufferedReader(
+                    new InputStreamReader(processEcho.getInputStream()));
             while ((line = bufferedReaderEcho.readLine()) != null) {
                 Log.e(TAG, line);
             }

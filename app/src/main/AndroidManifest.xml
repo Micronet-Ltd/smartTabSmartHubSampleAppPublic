@@ -22,14 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver
-            android:name="com.micronet_inc.smarthubsampleapp.receivers.DockStateReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_DOCK_EVENT"/>
-            </intent-filter>
-        </receiver>
 
     </application>
 
