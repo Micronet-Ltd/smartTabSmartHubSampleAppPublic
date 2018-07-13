@@ -1,6 +1,5 @@
 package com.micronet_inc.smarthubsampleapp.activities;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,12 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "SmartHubSampleApp";
 
     private static boolean ttyPortsEnumerated = false;
     private static int dockState = -1;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     private DeviceStateReceiver deviceStateReceiver = new DeviceStateReceiver();
 
@@ -45,15 +42,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         // Check if tty ports are available
         UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        if(usbManager != null) {
+        if (usbManager != null) {
             HashMap<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
             for (UsbDevice device : connectedDevices.values()) {
                 Log.d(TAG, "Product Name: " + device.getProductName());
@@ -75,23 +72,7 @@ public class MainActivity extends AppCompatActivity {
         filters.addAction(Intent.ACTION_DOCK_EVENT);
         filters.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filters.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(deviceStateReceiver,filters);
-    }
-
-    public static synchronized boolean areTtyPortsAvailable(){
-        return ttyPortsEnumerated;
-    }
-
-    public static synchronized void setTtyPortsState(boolean state){
-        ttyPortsEnumerated = state;
-    }
-
-    public static synchronized int getDockState(){
-        return dockState;
-    }
-
-    public static synchronized void setDockState(int state){
-        dockState = state;
+        registerReceiver(deviceStateReceiver, filters);
     }
 
     @Override
@@ -105,13 +86,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-//        Log.d(TAG, "Configuration changed: " + newConfig.toString());
+        Log.d(TAG, "Configuration changed: " + newConfig.toString());
+    }
+
+    public static synchronized boolean areTtyPortsAvailable() {
+        return ttyPortsEnumerated;
+    }
+
+    public static synchronized void setTtyPortsState(boolean state) {
+        ttyPortsEnumerated = state;
+    }
+
+    public static synchronized int getDockState() {
+        return dockState;
+    }
+
+    public static synchronized void setDockState(int state) {
+        dockState = state;
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new InputOutputsFragment(), "GPIOs");
-//        adapter.addFragment(new HWFragment(), "Misc");
         adapter.addFragment(new Can1OverviewFragment(), "Can1");
         adapter.addFragment(new Can2OverviewFragment(), "Can2");
         adapter.addFragment(new CanbusFramesFragment(), "CanFrames");
@@ -121,10 +117,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
+
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        private ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -138,14 +135,14 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+
+        private void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
         }
     }
 }
