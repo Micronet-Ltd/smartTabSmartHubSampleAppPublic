@@ -3,11 +3,6 @@ package com.micronet_inc.smarthubsampleapp.fragments;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbEndpoint;
-import android.hardware.usb.UsbInterface;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Process;
@@ -28,12 +23,12 @@ import com.micronet_inc.smarthubsampleapp.R;
 import com.micronet_inc.smarthubsampleapp.activities.MainActivity;
 import com.micronet_inc.smarthubsampleapp.adapters.GpiAdcTextAdapter;
 
+import com.micronet_inc.smarthubsampleapp.receivers.DeviceStateReceiver;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 
 /**
  * GPIO Fragment Class
@@ -60,8 +55,7 @@ public class InputOutputsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_input_outputs, container, false);
 
@@ -70,6 +64,51 @@ public class InputOutputsFragment extends Fragment {
         GridView gridview = rootView.findViewById(R.id.gridview);
         gridview.setAdapter(gpiAdcTextAdapter);
 
+        setUpButtons();
+
+        Log.d(TAG, "GPIOs view created.");
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+        Context context = getContext();
+        if (context != null) {
+            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, DeviceStateReceiver.getLocalIntentFilter());
+        }
+
+        this.dockState = MainActivity.getDockState();
+        updateCradleIgnState();
+        startPollingThread();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+
+        Context context = getContext();
+        if (context != null) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
+        }
+
+        // Stop the polling thread when the fragment is paused.
+        if (handler != null) {
+            handler.removeCallbacks(pollingThreadRunnable);
+            Log.d(TAG, "Polling thread stopped.");
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    private void setUpButtons() {
         final Button btnRefresh = rootView.findViewById(R.id.btnRefresh);
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,32 +116,6 @@ public class InputOutputsFragment extends Fragment {
                 gpiAdcTextAdapter.populateGpisAdcs();
                 gpiAdcTextAdapter.notifyDataSetChanged();
                 Toast.makeText(getContext(), "GPIs and ADCs refreshed", Toast.LENGTH_SHORT).show();
-
-                Context context = getContext();
-                if (context != null) {
-                    UsbManager mUsbManager = (UsbManager) context
-                            .getSystemService(Context.USB_SERVICE);
-
-                    if (mUsbManager != null) {
-                        HashMap<String, UsbDevice> connectedDevices = mUsbManager.getDeviceList();
-
-                        for (UsbDevice device : connectedDevices.values()) {
-                            Log.d(TAG, "Product Name: " + device.getProductName());
-
-                            // Check if tty ports are enumerated
-                            if (device.getProductId() == 773 && device.getVendorId() == 5538) {
-                                Log.d(TAG, "Get interfaces: " + device.getInterfaceCount());
-                                UsbInterface intf = device.getInterface(0);
-                                Log.d(TAG, "Endpoint count: " + intf.getEndpointCount());
-                                UsbEndpoint usbEndpoint = intf.getEndpoint(0);
-                                if (usbEndpoint == null) {
-                                    Log.wtf(TAG, "Endpoint null");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         });
 
@@ -153,52 +166,6 @@ public class InputOutputsFragment extends Fragment {
                 }
             }
         });
-
-        Log.d(TAG, "GPIOs view created.");
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-
-        IntentFilter filters = new IntentFilter();
-        filters.addAction("com.micronet.smarthubsampleapp.dockevent");
-        filters.addAction("com.micronet.smarthubsampleapp.portsattached");
-        filters.addAction("com.micronet.smarthubsampleapp.portsdetached");
-
-        Context context = getContext();
-        if (context != null) {
-            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, filters);
-        }
-
-        this.dockState = MainActivity.getDockState();
-        updateCradleIgnState();
-        startPollingThread();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-
-        Context context = getContext();
-        if (context != null) {
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
-        }
-
-        // Stop the polling thread when the fragment is paused.
-        if (handler != null) {
-            handler.removeCallbacks(pollingThreadRunnable);
-            Log.d(TAG, "Polling thread stopped.");
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
     }
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -210,17 +177,16 @@ public class InputOutputsFragment extends Fragment {
 
             if (action != null) {
                 switch (action) {
-                    case "com.micronet.smarthubsampleapp.dockevent":
+                    case DeviceStateReceiver.dockAction:
                         dockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
                         updateCradleIgnState();
                         Log.d(TAG, "Dock event received: " + dockState);
                         break;
-                    case "com.micronet.smarthubsampleapp.portsattached":
-                        gpiAdcTextAdapter.populateGpisAdcs();
-                        gpiAdcTextAdapter.notifyDataSetChanged();
+                    case DeviceStateReceiver.portsAttachedAction:
+                        handler.postDelayed(updateGpioRunnable, 2000);
                         Log.d(TAG, "Ports attached event received");
                         break;
-                    case "com.micronet.smarthubsampleapp.portsdetached":
+                    case DeviceStateReceiver.portsDetachedAction:
                         gpiAdcTextAdapter.populateGpisAdcs();
                         gpiAdcTextAdapter.notifyDataSetChanged();
                         Log.d(TAG, "Ports detached event received");
@@ -246,11 +212,23 @@ public class InputOutputsFragment extends Fragment {
                 android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 gpiAdcTextAdapter.populateGpisAdcs();
                 gpiAdcTextAdapter.notifyDataSetChanged();
-                //Toast.makeText(getContext().getApplicationContext(), "GPIs and ADCs polled", Toast.LENGTH_SHORT).show();
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
             } finally {
                 handler.postDelayed(this, POLLING_INTERVAL_MS);
+            }
+        }
+    };
+
+    final Runnable updateGpioRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                gpiAdcTextAdapter.populateGpisAdcs();
+                gpiAdcTextAdapter.notifyDataSetChanged();
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
             }
         }
     };

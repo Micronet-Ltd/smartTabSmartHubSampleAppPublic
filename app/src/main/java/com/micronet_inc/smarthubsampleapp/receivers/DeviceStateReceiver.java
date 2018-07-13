@@ -3,23 +3,14 @@ package com.micronet_inc.smarthubsampleapp.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbEndpoint;
-import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import android.util.Pair;
 import com.micronet_inc.smarthubsampleapp.activities.MainActivity;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 
@@ -27,30 +18,12 @@ public class DeviceStateReceiver extends BroadcastReceiver {
     private static final int MICRONET_869_MCU_VID = 0x15A2;
     private static final int MICRONET_869_MCU_PID = 0x305;
 
+    public static final String dockAction = "com.micronet.smarthubsampleapp.dockevent";
+    public static final String portsAttachedAction = "com.micronet.smarthubsampleapp.portsattached";
+    public static final String portsDetachedAction = "com.micronet.smarthubsampleapp.portsdetached";
+
     public DeviceStateReceiver() {
 
-    }
-
-    private void listTtyPorts(){
-        String lsTtyResponse = "";
-        for (int portNum = 0; portNum < 5; portNum++) {
-            String cmd = "/system/bin/ls /dev/ttyACM" + portNum;
-            try {
-                Process process = Runtime.getRuntime().exec(cmd);
-                process.waitFor();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String s = null;
-                while ((s = reader.readLine()) != null) {
-                    //Log.i(TAG, "ls /dev/ttyACM"+ portNum + " = " + s);
-                    lsTtyResponse = lsTtyResponse.concat(s + "\n");
-                }
-                reader.close();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.i(TAG, "ls /dev/ttyACM* = \n" + lsTtyResponse);
     }
 
     @Override
@@ -66,68 +39,46 @@ public class DeviceStateReceiver extends BroadcastReceiver {
             int dockState = intent.getIntExtra(android.content.Intent.EXTRA_DOCK_STATE, -1);
             MainActivity.setDockState(dockState);
 
-            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-            Intent localIntent = new Intent("com.micronet.smarthubsampleapp.dockevent");
-            localIntent.putExtra(android.content.Intent.EXTRA_DOCK_STATE, dockState);
-            localBroadcastManager.sendBroadcast(localIntent);
-
+            Pair<String, Integer> extra = new Pair<>(android.content.Intent.EXTRA_DOCK_STATE, dockState);
+            sendLocalBroadcast(context, dockAction, extra);
             Log.d(TAG, "Dock event received: " + dockState);
-        } else //if ((UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) ||
-               // (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action))){ // USB Attach Detach Event
-        {
-            Log.d(TAG, "USB event received: " + action);
-            UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        } else {
+            UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
-            if (mUsbManager != null) {
-                HashMap<String, UsbDevice> connectedDevices = mUsbManager.getDeviceList();
+            // Check if attached or detached device is the Virtual Coms
+            if(device.getProductId() == MICRONET_869_MCU_PID && device.getVendorId() == MICRONET_869_MCU_VID){
 
-                boolean portsEnumerated = false;
-                boolean portsEnumeratedBefore = MainActivity.areTtyPortsAvailable();
-
-                for (UsbDevice device : connectedDevices.values()) {
-                    Log.d(TAG, "Product Name: " + device.getProductName());
-
-                    // Check if tty ports are enumerated
-                    if (device.getProductId() == MICRONET_869_MCU_PID && device.getVendorId() == MICRONET_869_MCU_VID) {
-                        Log.d(TAG, "Interface count: " + device.getInterfaceCount());
-                        UsbInterface intf = device.getInterface(0);
-                        Log.d(TAG, "Endpoint count: " + intf.getEndpointCount());
-                        UsbEndpoint usbEndpoint = intf.getEndpoint(0);
-                        if (usbEndpoint == null) {
-                            Log.wtf(TAG, "Endpoint null");
-                            break;
-                        }
-
-                        listTtyPorts();
-                        portsEnumerated = true;
-                    }
+                // Send broadcast depending on action
+                if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)){
+                    sendLocalBroadcast(context, portsAttachedAction, null);
+                    MainActivity.setTtyPortsState(true);
+                }else{
+                    sendLocalBroadcast(context, portsDetachedAction, null);
+                    MainActivity.setTtyPortsState(false);
                 }
 
-                // Handle state
-                if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action) && portsEnumerated) {
-                    if (!portsEnumeratedBefore) {
-                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-                        Intent localIntent = new Intent("com.micronet.smarthubsampleapp.portsattached");
-                        localBroadcastManager.sendBroadcast(localIntent);
-
-                        MainActivity.setTtyPortsState(true);
-                        Log.d(TAG, "Attach event, ports enumerated.");
-                    }
-                } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action) && !portsEnumerated) {
-                    Log.d(TAG, "Attach event, ports not enumerated.");
-                } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action) && !portsEnumerated) {
-                    if (portsEnumeratedBefore) {
-                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-                        Intent localIntent = new Intent("com.micronet.smarthubsampleapp.portsdetached");
-                        localBroadcastManager.sendBroadcast(localIntent);
-
-                        MainActivity.setTtyPortsState(false);
-                        Log.d(TAG, "Detach event, ports not enumerated.");
-                    }
-                } else {
-                    Log.d(TAG, "Detach event, ports enumerated.");
-                }
+                Log.d(TAG, "Sent local broadcast with action: " + action);
             }
         }
+    }
+
+    public static IntentFilter getLocalIntentFilter(){
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(dockAction);
+        intentFilter.addAction(portsAttachedAction);
+        intentFilter.addAction(portsDetachedAction);
+        return intentFilter;
+    }
+
+    private void sendLocalBroadcast(Context context, String action, Pair<String, Integer> extra){
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        Intent localIntent = new Intent(action);
+
+        // Add extra if not null
+        if(extra != null){
+            localIntent.putExtra(extra.first, extra.second);
+        }
+
+        localBroadcastManager.sendBroadcast(localIntent);
     }
 }

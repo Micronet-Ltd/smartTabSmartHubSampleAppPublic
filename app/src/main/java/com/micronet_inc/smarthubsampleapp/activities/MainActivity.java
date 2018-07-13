@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SmartHubSampleApp";
 
-    private static boolean ttyPortsEnumerated = false;
+    private static boolean portsAttached = false;
     private static int dockState = -1;
 
     private DeviceStateReceiver deviceStateReceiver = new DeviceStateReceiver();
@@ -53,11 +53,9 @@ public class MainActivity extends AppCompatActivity {
         if (usbManager != null) {
             HashMap<String, UsbDevice> connectedDevices = usbManager.getDeviceList();
             for (UsbDevice device : connectedDevices.values()) {
-                Log.d(TAG, "Product Name: " + device.getProductName());
-
                 // Check if tty ports are enumerated
                 if (device.getProductId() == 773 && device.getVendorId() == 5538) {
-                    ttyPortsEnumerated = true;
+                    portsAttached = true;
                 }
             }
         }
@@ -90,11 +88,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static synchronized boolean areTtyPortsAvailable() {
-        return ttyPortsEnumerated;
+        return portsAttached;
     }
 
     public static synchronized void setTtyPortsState(boolean state) {
-        ttyPortsEnumerated = state;
+        portsAttached = state;
     }
 
     public static synchronized int getDockState() {
