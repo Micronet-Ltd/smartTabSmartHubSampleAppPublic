@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new Can1OverviewFragment(), "Can1");
         adapter.addFragment(new Can2OverviewFragment(), "Can2");
         adapter.addFragment(new CanBusFramesFragment(), "CanFrames");
-        adapter.addFragment(new J1708Fragment(), "J1708");
+        //adapter.addFragment(new J1708Fragment(), "J1708");
         adapter.addFragment(new AboutFragment(), "Info");
         viewPager.setAdapter(adapter);
     }
