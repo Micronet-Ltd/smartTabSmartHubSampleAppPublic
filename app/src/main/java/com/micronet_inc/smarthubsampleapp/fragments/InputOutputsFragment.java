@@ -35,7 +35,7 @@ import java.io.InputStreamReader;
  */
 public class InputOutputsFragment extends Fragment {
 
-    private final String TAG = "SHInputOutputFragment";
+    private final String TAG = "InputOutputFragment";
     private static final long POLLING_INTERVAL_MS = 2000;
 
     private View rootView;
