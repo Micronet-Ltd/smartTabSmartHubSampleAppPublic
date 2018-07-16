@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp;
+package com.micronet.smarthubsampleapp;
 
 public enum GPIs {
     ANALOG_IN1("kADC_ANALOG_IN1"),

@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp.receivers;
+package com.micronet.smarthubsampleapp.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import android.util.Pair;
-import com.micronet_inc.smarthubsampleapp.activities.MainActivity;
+import com.micronet.smarthubsampleapp.activities.MainActivity;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 

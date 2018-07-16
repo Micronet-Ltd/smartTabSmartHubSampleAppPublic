@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp;
+package com.micronet.smarthubsampleapp;
 
 import static java.lang.Thread.sleep;
 

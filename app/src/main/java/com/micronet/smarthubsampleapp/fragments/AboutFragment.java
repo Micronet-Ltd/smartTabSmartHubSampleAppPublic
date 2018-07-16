@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp.fragments;
+package com.micronet.smarthubsampleapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.micronet_inc.smarthubsampleapp.BuildConfig;
-import com.micronet_inc.smarthubsampleapp.R;
+import com.micronet.smarthubsampleapp.BuildConfig;
+import com.micronet.smarthubsampleapp.R;
 
-import com.micronet_inc.smarthubsampleapp.receivers.DeviceStateReceiver;
+import com.micronet.smarthubsampleapp.receivers.DeviceStateReceiver;
 import micronet.hardware.MicronetHardware;
 import micronet.hardware.exception.MicronetHardwareException;
 

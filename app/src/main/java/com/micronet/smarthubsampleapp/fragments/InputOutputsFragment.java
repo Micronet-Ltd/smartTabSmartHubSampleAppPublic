@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp.fragments;
+package com.micronet.smarthubsampleapp.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,11 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.micronet_inc.smarthubsampleapp.R;
-import com.micronet_inc.smarthubsampleapp.activities.MainActivity;
-import com.micronet_inc.smarthubsampleapp.adapters.GpiAdcTextAdapter;
+import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarthubsampleapp.activities.MainActivity;
+import com.micronet.smarthubsampleapp.adapters.GpiAdcTextAdapter;
 
-import com.micronet_inc.smarthubsampleapp.receivers.DeviceStateReceiver;
+import com.micronet.smarthubsampleapp.receivers.DeviceStateReceiver;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp.fragments;
+package com.micronet.smarthubsampleapp.fragments;
 
 import static java.lang.Thread.sleep;
 
@@ -23,8 +23,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import com.micronet_inc.smarthubsampleapp.CanTest;
-import com.micronet_inc.smarthubsampleapp.R;
+import com.micronet.smarthubsampleapp.CanTest;
+import com.micronet.smarthubsampleapp.R;
 import java.util.Calendar;
 import java.util.Date;
 
