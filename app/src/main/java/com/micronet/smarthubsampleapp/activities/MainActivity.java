@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Configuration changed: " + newConfig.toString());
     }
 
+    @SuppressWarnings("unused")
     public static synchronized boolean areTtyPortsAvailable() {
         return portsAttached;
     }

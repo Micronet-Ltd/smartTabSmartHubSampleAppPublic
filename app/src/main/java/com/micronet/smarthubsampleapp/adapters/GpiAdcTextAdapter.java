@@ -90,8 +90,7 @@ public class GpiAdcTextAdapter extends BaseAdapter {
         return position;
     }
 
-    public class TextHolder {
-
+    class TextHolder {
         TextView title;
         TextView subitem;
     }

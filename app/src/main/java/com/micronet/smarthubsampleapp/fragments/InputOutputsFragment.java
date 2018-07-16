@@ -205,7 +205,7 @@ public class InputOutputsFragment extends Fragment {
         Log.d(TAG, "Polling thread started.");
     }
 
-    final Runnable pollingThreadRunnable = new Runnable() {
+    private final Runnable pollingThreadRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -220,7 +220,7 @@ public class InputOutputsFragment extends Fragment {
         }
     };
 
-    final Runnable updateGpioRunnable = new Runnable() {
+    private final Runnable updateGpioRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -233,7 +233,7 @@ public class InputOutputsFragment extends Fragment {
         }
     };
 
-    public void updateCradleIgnState() {
+    private void updateCradleIgnState() {
         String cradleStateMsg, ignitionStateMsg;
         switch (dockState) {
             case Intent.EXTRA_DOCK_STATE_UNDOCKED:
@@ -264,7 +264,7 @@ public class InputOutputsFragment extends Fragment {
         ignitionStateTextview.setText(ignitionStateMsg);
     }
 
-    public void changeOutputState(int i, boolean state) {
+    private void changeOutputState(int i, boolean state) {
 
         int gpioNum = 699 + i;
         int gpioState = 0;

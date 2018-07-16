@@ -14,7 +14,7 @@ import com.micronet.smarthubsampleapp.activities.MainActivity;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 
-    public final String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
     private static final int MICRONET_869_MCU_VID = 0x15A2;
     private static final int MICRONET_869_MCU_PID = 0x305;
 
