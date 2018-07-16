@@ -8,20 +8,18 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.micronet_inc.smarthubsampleapp"
+        applicationId "com.micronet.smarthubsampleapp"
         minSdkVersion 22
         targetSdkVersion 27
         versionCode 1
-        versionName "1.2.3"
+        versionName "1.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
     dependencies {
-        //implementation 'com.android.support:design:26.0.+'
         implementation 'com.android.support:design:27.1.1'
-        //implementation project(':MicronetHardwareLibrary')
     }
     buildTypes {
         release {
@@ -45,7 +43,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    //implementation project(':MicronetHardwareLibrary')
 }
 
 def props = new Properties()

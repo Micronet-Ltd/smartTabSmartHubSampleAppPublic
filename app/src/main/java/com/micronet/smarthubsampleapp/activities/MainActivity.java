@@ -1,4 +1,4 @@
-package com.micronet_inc.smarthubsampleapp.activities;
+package com.micronet.smarthubsampleapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,14 +15,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.micronet_inc.smarthubsampleapp.R;
-import com.micronet_inc.smarthubsampleapp.fragments.AboutFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.Can1OverviewFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.Can2OverviewFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.CanBusFramesFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.InputOutputsFragment;
-import com.micronet_inc.smarthubsampleapp.fragments.J1708Fragment;
-import com.micronet_inc.smarthubsampleapp.receivers.DeviceStateReceiver;
+import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarthubsampleapp.fragments.AboutFragment;
+import com.micronet.smarthubsampleapp.fragments.Can1OverviewFragment;
+import com.micronet.smarthubsampleapp.fragments.Can2OverviewFragment;
+import com.micronet.smarthubsampleapp.fragments.CanBusFramesFragment;
+import com.micronet.smarthubsampleapp.fragments.InputOutputsFragment;
+import com.micronet.smarthubsampleapp.receivers.DeviceStateReceiver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Configuration changed: " + newConfig.toString());
     }
 
+    @SuppressWarnings("unused")
     public static synchronized boolean areTtyPortsAvailable() {
         return portsAttached;
     }

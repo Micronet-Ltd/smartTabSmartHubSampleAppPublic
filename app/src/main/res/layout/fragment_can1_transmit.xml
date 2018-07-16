@@ -71,14 +71,15 @@
           android:minHeight="5dip"/>
 
         <TextView
-          android:id="@+id/textViewCan1FramesTx"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
-          android:layout_alignLeft="@+id/xAxis"
-          android:layout_below="@+id/lblCan1TransmitSpeed"
-          android:text="Tx 0 Frames/0 Bytes"
-          android:textSize="10sp"/>
+            android:id="@+id/textViewCan1FramesTx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_alignLeft="@+id/xAxis"
+            android:layout_below="@+id/lblCan1TransmitSpeed"
+            android:text="Tx 0 Frames/0 Bytes"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
 
         <Button
           android:id="@+id/btnCan1SendJ1939"

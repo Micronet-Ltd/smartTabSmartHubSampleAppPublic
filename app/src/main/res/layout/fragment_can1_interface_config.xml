@@ -33,16 +33,17 @@
           android:textColor="@color/colorPrimary"
           android:textSize="14sp"/>
         <TextView
-          android:id="@+id/lblCan1ViewBaud"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="25dp"
-          android:layout_alignParentStart="true"
-          android:layout_alignParentTop="false"
-          android:paddingTop="10dp"
-          android:text="CAN Baud Rate: "
-          android:textAllCaps="false"
-          android:textSize="10sp"/>
+            android:id="@+id/lblCan1ViewBaud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="false"
+            android:paddingTop="10dp"
+            android:text="CAN Baud Rate: "
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
 
         <RadioGroup
           android:id="@+id/radioGrCan1BaudRates"
@@ -72,13 +73,14 @@
               android:textSize="8sp"/>
         </RadioGroup>
         <TextView
-          android:id="@+id/textViewCan1Silent"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_alignTop="@+id/toggleButtonCan1Listen"
-          android:text="Listening Mode: "
-          android:textSize="10sp"/>
+            android:id="@+id/textViewCan1Silent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/toggleButtonCan1Listen"
+            android:text="Listening Mode: "
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
         <ToggleButton
           android:id="@+id/toggleButtonCan1Listen"
           android:layout_width="78dp"
@@ -91,13 +93,14 @@
           android:textSize="8sp"/>
 
         <TextView
-          android:id="@+id/textViewCan1Term"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_alignTop="@+id/toggleButtonCan1Term"
-          android:text="Termination: "
-          android:textSize="10sp"/>
+            android:id="@+id/textViewCan1Term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/toggleButtonCan1Term"
+            android:text="Termination: "
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
         <ToggleButton
           android:id="@+id/toggleButtonCan1Term"
           android:layout_width="79dp"
@@ -110,13 +113,14 @@
           android:textSize="8sp"/>
 
         <TextView
-          android:id="@+id/textViewCan1ConfigFilters"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_below="@+id/toggleButtonCan1Term"
-          android:text="Configure Pre-set Filters:  "
-          android:textSize="10sp"/>
+            android:id="@+id/textViewCan1ConfigFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toggleButtonCan1Term"
+            android:text="Configure Pre-set Filters:  "
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
 
         <ToggleButton
           android:id="@+id/toggleButtonCan1Filters"
@@ -128,13 +132,14 @@
           android:textSize="8sp"/>
 
         <TextView
-          android:id="@+id/textViewCan1ConfigFlowControl"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_below="@+id/toggleButtonCan1Filters"
-          android:text="Configure Flow Control:  "
-          android:textSize="10sp"/>
+            android:id="@+id/textViewCan1ConfigFlowControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toggleButtonCan1Filters"
+            android:text="Configure Flow Control:  "
+            android:textColor="@android:color/black"
+            android:textSize="10sp"/>
 
         <ToggleButton
           android:id="@+id/toggleButtonCan1FlowControl"
