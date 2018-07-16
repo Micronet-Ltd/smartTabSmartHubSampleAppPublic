@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:background="@android:color/background_light">
 
     <View
         android:id="@+id/xAxis"
@@ -22,6 +23,7 @@
 
     <TextView
         android:id="@+id/lblCan1"
+        android:textStyle="normal|bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/yAxis"
@@ -30,44 +32,45 @@
         android:layout_alignRight="@id/yAxis"
         android:gravity="center"
         android:text="@string/can1"
-        android:textColor="@android:color/holo_orange_dark"
-        android:textStyle="normal|bold" />
+        android:textColor="@android:color/holo_orange_dark"/>
 
     <TextView
         android:id="@+id/lblCan1Packets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_alignEnd="@id/yAxis"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@id/yAxis"
         android:layout_below="@id/lblCan1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
         android:text="@string/can2"
         android:textAllCaps="true"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/lvJ1939FramesPort1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_alignEnd="@id/yAxis"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@id/yAxis"
         android:layout_below="@id/lblCan1Packets"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
         android:gravity="bottom"
         android:maxLines="20"
         android:minLines="1"
+        android:textColor="@android:color/black"
         android:textSize="13sp"
-        android:typeface="monospace" />
+        android:typeface="monospace"/>
 
     <TextView
         android:id="@+id/lblCan2"
+        android:textStyle="normal|bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/yAxis"
@@ -77,36 +80,36 @@
         android:gravity="center"
         android:text="CAN2 "
         android:textColor="@android:color/holo_orange_dark"
-        android:textSize="14sp"
-        android:textStyle="normal|bold" />
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/lblCan2Packets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lblCan2"
         android:layout_marginLeft="5dp"
+        android:layout_below="@+id/lblCan2"
         android:layout_toEndOf="@+id/yAxis"
         android:text="@string/can2"
         android:textAllCaps="true"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/lvJ1939FramesPort2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_alignLeft="@id/yAxis"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignStart="@id/yAxis"
         android:layout_below="@id/lblCan2Packets"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
         android:gravity="bottom"
         android:maxLines="20"
         android:minLines="1"
         android:scrollbars="vertical"
+        android:textColor="@android:color/black"
         android:textSize="13sp"
         android:typeface="monospace"/>
 
