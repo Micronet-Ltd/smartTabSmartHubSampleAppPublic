@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "SmartTabSmartHubSampleApp";
+    private static final String TAG = "SmartSampleApp";
 
     private static boolean portsAttached = false;
     private static int dockState = -1;

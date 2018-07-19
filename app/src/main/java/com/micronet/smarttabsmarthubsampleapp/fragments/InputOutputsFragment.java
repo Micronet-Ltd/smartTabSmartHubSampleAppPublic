@@ -75,6 +75,7 @@ public class InputOutputsFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume");
 
+        // Register for local broadcasts
         Context context = getContext();
         if (context != null) {
             LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, DeviceStateReceiver.getLocalIntentFilter());
@@ -82,6 +83,7 @@ public class InputOutputsFragment extends Fragment {
 
         this.dockState = MainActivity.getDockState();
         updateCradleIgnState();
+        // Start polling thread
         startPollingThread();
     }
 
@@ -90,6 +92,7 @@ public class InputOutputsFragment extends Fragment {
         super.onPause();
         Log.d(TAG, "onPause");
 
+        // Unregister for local broadcasts
         Context context = getContext();
         if (context != null) {
             LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
@@ -175,6 +178,7 @@ public class InputOutputsFragment extends Fragment {
 
             String action = intent.getAction();
 
+            // Handle local intent action
             if (action != null) {
                 switch (action) {
                     case DeviceStateReceiver.dockAction:
@@ -215,6 +219,7 @@ public class InputOutputsFragment extends Fragment {
             } catch (Exception ex) {
                 Log.e(TAG, ex.getMessage());
             } finally {
+                // Post delayed runnable
                 handler.postDelayed(this, POLLING_INTERVAL_MS);
             }
         }
@@ -265,7 +270,7 @@ public class InputOutputsFragment extends Fragment {
     }
 
     private void changeOutputState(int i, boolean state) {
-
+        // Not currently used
         int gpioNum = 699 + i;
         int gpioState = 0;
 
