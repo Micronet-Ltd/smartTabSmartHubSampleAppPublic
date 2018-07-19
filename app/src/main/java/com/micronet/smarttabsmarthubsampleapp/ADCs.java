@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp;
+package com.micronet.smarttabsmarthubsampleapp;
 
 public enum ADCs{
     ADC0("kADC_ANALOG_IN1"),

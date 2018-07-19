@@ -8,11 +8,11 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.micronet.smarthubsampleapp"
+        applicationId "com.micronet.smarttabsmarthubsampleapp"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.2.4"
+        versionCode 125
+        versionName "1.2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"

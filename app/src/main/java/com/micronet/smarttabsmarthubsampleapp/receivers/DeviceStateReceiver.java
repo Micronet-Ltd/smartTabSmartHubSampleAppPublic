@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.receivers;
+package com.micronet.smarttabsmarthubsampleapp.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import android.util.Pair;
-import com.micronet.smarthubsampleapp.activities.MainActivity;
+import com.micronet.smarttabsmarthubsampleapp.activities.MainActivity;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 
@@ -18,9 +18,9 @@ public class DeviceStateReceiver extends BroadcastReceiver {
     private static final int MICRONET_869_MCU_VID = 0x15A2;
     private static final int MICRONET_869_MCU_PID = 0x305;
 
-    public static final String dockAction = "com.micronet.smarthubsampleapp.dockevent";
-    public static final String portsAttachedAction = "com.micronet.smarthubsampleapp.portsattached";
-    public static final String portsDetachedAction = "com.micronet.smarthubsampleapp.portsdetached";
+    public static final String dockAction = "com.micronet.smarttabsmarthubsampleapp.dockevent";
+    public static final String portsAttachedAction = "com.micronet.smarttabsmarthubsampleapp.portsattached";
+    public static final String portsDetachedAction = "com.micronet.smarttabsmarthubsampleapp.portsdetached";
 
     public DeviceStateReceiver() {
 

@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp;
+package com.micronet.smarttabsmarthubsampleapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

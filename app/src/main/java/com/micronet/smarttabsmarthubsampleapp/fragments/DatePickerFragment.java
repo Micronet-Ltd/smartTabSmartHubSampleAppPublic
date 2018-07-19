@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.fragments;
+package com.micronet.smarttabsmarthubsampleapp.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

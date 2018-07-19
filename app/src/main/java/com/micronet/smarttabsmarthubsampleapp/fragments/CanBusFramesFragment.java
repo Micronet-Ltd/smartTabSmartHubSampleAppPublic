@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.fragments;
+package com.micronet.smarttabsmarthubsampleapp.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.micronet.smarthubsampleapp.CanTest;
-import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.CanTest;
+import com.micronet.smarttabsmarthubsampleapp.R;
 
 /**
  * Created by Eemaan Siddiqi on 3/3/2017.

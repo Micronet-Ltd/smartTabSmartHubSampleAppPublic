@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.activities;
+package com.micronet.smarttabsmarthubsampleapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +15,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.micronet.smarthubsampleapp.R;
-import com.micronet.smarthubsampleapp.fragments.AboutFragment;
-import com.micronet.smarthubsampleapp.fragments.Can1OverviewFragment;
-import com.micronet.smarthubsampleapp.fragments.Can2OverviewFragment;
-import com.micronet.smarthubsampleapp.fragments.CanBusFramesFragment;
-import com.micronet.smarthubsampleapp.fragments.InputOutputsFragment;
-import com.micronet.smarthubsampleapp.receivers.DeviceStateReceiver;
+import com.micronet.smarttabsmarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.fragments.AboutFragment;
+import com.micronet.smarttabsmarthubsampleapp.fragments.Can1OverviewFragment;
+import com.micronet.smarttabsmarthubsampleapp.fragments.Can2OverviewFragment;
+import com.micronet.smarttabsmarthubsampleapp.fragments.CanBusFramesFragment;
+import com.micronet.smarttabsmarthubsampleapp.fragments.InputOutputsFragment;
+import com.micronet.smarttabsmarthubsampleapp.receivers.DeviceStateReceiver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "SmartHubSampleApp";
+    private static final String TAG = "SmartTabSmartHubSampleApp";
 
     private static boolean portsAttached = false;
     private static int dockState = -1;
