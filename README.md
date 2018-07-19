@@ -4,16 +4,17 @@
 |Project|SmartTab/SmartHub Sample App|
 |Project Name |SmartTab/SmartHub Sample App |
 |Aim/Objectives |To document an Android sample application that shows application developers how to use the Hardware Library and Vehicle Bus Library with the Smart Cradle and SmartHub. |
-|Current Application Version |V1.2.4 |
-|Document Revision Number |03 |
-|Document Revision Date |17th July 2018 |
+|Current Application Version |V1.2.5 |
+|Document Revision Number |04 |
+|Document Revision Date |19th July 2018 |
 
 ## Documentation History 
 |Document Revision |Written By |Date |Comments |
 |------------------|-----------|-----|---------|
 |01 |Abid Esmail  |14 June 2018 |Draft |
 |02 |Scott Krstyen |13 July 2018 |Added UI section, Hardware Library Section and Important Points to discuss |
-|03 |Abid Esmail and Scott Krstyen |17 July 2018 |Added CAN bus section, background information and |
+|03 |Abid Esmail and Scott Krstyen |17 July 2018 |Added CAN bus section, background information and more information about dock events. |
+|04 |Scott Krstyen|19th July 2018|Updated app name and references to devices|
 
 
 ## Preface
@@ -55,11 +56,15 @@ General purpose outputs (GPO) control, sending and receiving J1708 messages.
 ### Graphical User Interface
 The graphical user interface is tabbed with a standard Android header. 
 
+-----
+
 ### GPIO tab
 ##### In Cradle
 ![Gpio Tab In Cradle](./images/GpioTabInCradle.png "Gpio Tab In Cradle")
 ##### Out of Cradle
 ![Gpio Tab Out Of Cradle](./images/GpioTabOutOfCradle.png "Gpio Tab Out Of Cradle")
+
+-----
 
 ### CAN bus 1 tab
 ##### Closed Can Interface
@@ -67,8 +72,14 @@ The graphical user interface is tabbed with a standard Android header.
 ##### Opened Can Interface and Receiving Messages
 ![Can Tab Opened](./images/CanTabOpened.png "Can Tab Opened")
 
+Note: The Configure Interface buttons can only be reconfigured when the CAN interface is closed because these configuration values can only be set during the createInterface() call. 
+
+-----
+
 ### CAN bus 2 tab
 ##### Same as CAN bus 1 tab
+
+-----
 
 ### CAN bus frames tab
 ##### Not Receiving Messages 
@@ -77,8 +88,12 @@ The graphical user interface is tabbed with a standard Android header.
 ##### Receiving Messages
 ![Can Frames Tab Receiving](./images/CanFramesTabReceiving.png "Can Frames Tab Receiving")
 
+-----
+
 ### J1708 tab
 ##### Not Currently Implemented
+
+-----
 
 ### Info tab
 ##### In Cradle
@@ -103,7 +118,7 @@ More on Local Broadcasts:
 
 https://developer.android.com/reference/android/support/v4/content/LocalBroadcastManager. 
 
-The Micronet Hardware Library should not be used until at least 2 seconds after the UsbManager.ACTION_USB_DEVICE_ATTACHED broadcast has been received. If it is used too quickly then it can fail to receive information back from the device because the underlying driver needs to get initialized and can take up 2 seconds to initialize after the USB ports are available 
+The Micronet Hardware Library should not be used until at least 2 seconds after the UsbManager.ACTION_USB_DEVICE_ATTACHED broadcast has been received. If it is used too quickly then it can fail to receive information back from the device because the underlying driver needs to get initialized and can take up 2 seconds to initialize after the USB ports are available.
 
 The TTY ports can be used immediately after the UsbManager.ACTION_USB_DEVICE_ATTACHED broadcast is received. In this app that broadcast is received and then the CAN bus interface can be opened.  
 
