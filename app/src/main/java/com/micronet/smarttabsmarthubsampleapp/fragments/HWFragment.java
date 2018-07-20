@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.fragments;
+package com.micronet.smarttabsmarthubsampleapp.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.R;
 
 import java.util.Arrays;
 

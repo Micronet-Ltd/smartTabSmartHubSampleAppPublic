@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp;
+package com.micronet.smarttabsmarthubsampleapp;
 
 import org.junit.Test;
 

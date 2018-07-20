@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.receivers;
+package com.micronet.smarttabsmarthubsampleapp.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,17 +10,21 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import android.util.Pair;
-import com.micronet.smarthubsampleapp.activities.MainActivity;
+import com.micronet.smarttabsmarthubsampleapp.activities.MainActivity;
 
+/**
+ * Receiver class used to receive USB enumeration broadcasts and dock event broadcasts.
+ */
 public class DeviceStateReceiver extends BroadcastReceiver {
 
     private final String TAG = getClass().getSimpleName();
     private static final int MICRONET_869_MCU_VID = 0x15A2;
     private static final int MICRONET_869_MCU_PID = 0x305;
 
-    public static final String dockAction = "com.micronet.smarthubsampleapp.dockevent";
-    public static final String portsAttachedAction = "com.micronet.smarthubsampleapp.portsattached";
-    public static final String portsDetachedAction = "com.micronet.smarthubsampleapp.portsdetached";
+    // Local broadcast intent actions.
+    public static final String dockAction = "com.micronet.smarttabsmarthubsampleapp.dockevent";
+    public static final String portsAttachedAction = "com.micronet.smarttabsmarthubsampleapp.portsattached";
+    public static final String portsDetachedAction = "com.micronet.smarttabsmarthubsampleapp.portsdetached";
 
     public DeviceStateReceiver() {
 
@@ -62,6 +66,9 @@ public class DeviceStateReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Return IntentFilter that has local intent actions.
+     */
     public static IntentFilter getLocalIntentFilter(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(dockAction);
@@ -74,7 +81,6 @@ public class DeviceStateReceiver extends BroadcastReceiver {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         Intent localIntent = new Intent(action);
 
-        // Add extra if not null
         if(extra != null){
             localIntent.putExtra(extra.first, extra.second);
         }

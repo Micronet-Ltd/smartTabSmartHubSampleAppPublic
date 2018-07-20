@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.fragments;
+package com.micronet.smarttabsmarthubsampleapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.micronet.smarthubsampleapp.BuildConfig;
-import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.BuildConfig;
+import com.micronet.smarttabsmarthubsampleapp.R;
 
-import com.micronet.smarthubsampleapp.receivers.DeviceStateReceiver;
+import com.micronet.smarttabsmarthubsampleapp.receivers.DeviceStateReceiver;
 import micronet.hardware.MicronetHardware;
 import micronet.hardware.exception.MicronetHardwareException;
 
@@ -42,7 +42,7 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_about, container, false);
         TextView txtAbout = rootView.findViewById(R.id.txtAppInfo);
-        txtAbout.setText(String.format("Smarthub Sample App v %s\n" +
+        txtAbout.setText(String.format("SmartTab/SmartHub Sample App v %s\n" +
                 "Copyright © 2018 Micronet Inc.\n", BuildConfig.VERSION_NAME));
 
         updateInfoText();

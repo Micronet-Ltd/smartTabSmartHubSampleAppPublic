@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Hub Sample App</string>
+    <string name="app_name">SmartTab/SmartHub Sample App</string>
 
     <string name="ADCs">ADC voltages</string>
     <string name="hello_blank_fragment">helloBlank</string>

@@ -1,4 +1,4 @@
-package com.micronet.smarthubsampleapp.adapters;
+package com.micronet.smarttabsmarthubsampleapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.micronet.smarthubsampleapp.ADCs;
-import com.micronet.smarthubsampleapp.GPIs;
-import com.micronet.smarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.ADCs;
+import com.micronet.smarttabsmarthubsampleapp.GPIs;
+import com.micronet.smarttabsmarthubsampleapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
