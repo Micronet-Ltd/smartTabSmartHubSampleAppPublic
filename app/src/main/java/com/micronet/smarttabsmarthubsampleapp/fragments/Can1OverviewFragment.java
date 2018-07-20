@@ -2,6 +2,8 @@ package com.micronet.smarttabsmarthubsampleapp.fragments;
 
 import static java.lang.Thread.sleep;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.micronet.smarttabsmarthubsampleapp.CanTest;
 import com.micronet.smarttabsmarthubsampleapp.R;
+import com.micronet.smarttabsmarthubsampleapp.CanFramesViewModel;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -55,6 +59,8 @@ public class Can1OverviewFragment extends Fragment {
     private TextView textViewFramesRx;
     private TextView textViewFramesTx;
 
+    private CanFramesViewModel mCanFramesViewModel;
+
     // Socket dependent UI
     private Button btnTransmitCAN1;
     private ToggleButton swCycleTransmitJ1939Can1;
@@ -79,7 +85,8 @@ public class Can1OverviewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        canTest = CanTest.getInstance();
+        //canTest = CanTest.getInstance();
+        canTest = new CanTest(CanTest.CAN_PORT1);
     }
 
     @Override
@@ -111,7 +118,7 @@ public class Can1OverviewFragment extends Fragment {
     }
 
     private void setStateSocketDependentUI() {
-        boolean open = canTest.isPort1SocketOpen();
+        boolean open = canTest.isPortSocketOpen();
         btnTransmitCAN1.setEnabled(open);
         swCycleTransmitJ1939Can1.setEnabled(open);
         seekBarJ1939SendCan1.setEnabled(open);
@@ -136,7 +143,7 @@ public class Can1OverviewFragment extends Fragment {
         if(status != null) {
             txtInterfaceStatus.setText(status);
             txtInterfaceStatus.setBackgroundColor(Color.YELLOW);
-        } else if(canTest.isCan1InterfaceOpen()) {
+        } else if(canTest.isCanInterfaceOpen()) {
             txtInterfaceStatus.setText(getString(R.string.open));
             txtInterfaceStatus.setBackgroundColor(Color.GREEN);
         } else { // closed
@@ -148,7 +155,7 @@ public class Can1OverviewFragment extends Fragment {
         if(status != null) {
             txtSocketStatus.setText(status);
             txtSocketStatus.setBackgroundColor(Color.YELLOW);
-        } else if(canTest.isPort1SocketOpen()) {
+        } else if(canTest.isPortSocketOpen()) {
             txtSocketStatus.setText(getString(R.string.open));
             txtSocketStatus.setBackgroundColor(Color.GREEN);
         } else { // closed
@@ -168,19 +175,20 @@ public class Can1OverviewFragment extends Fragment {
     }
 
     private void openCan1Interface(){
-        canTest.setRemoveCan1InterfaceState(false);
+        canTest.setRemoveCanInterfaceState(false);
         canTest.setBaudRate(baudRateSelected);
         canTest.setPortNumber(2);
         canTest.setSilentMode(silentMode);
         canTest.setTermination(termination);
-        canTest.setRemoveCan1InterfaceState(false);
+        canTest.setRemoveCanInterfaceState(false);
         canTest.setFiltersEnabled(filtersEnabled);
         canTest.setFlowControlEnabled(flowControlEnabled);
         executeChangeBaudRate();
     }
 
     private void closeCan1Interface(){
-        canTest.setRemoveCan1InterfaceState(true);
+        canTest.setRemoveCanInterfaceState(true);
+        clearUIFrameCounts();
         executeChangeBaudRate();
     }
 
@@ -192,25 +200,37 @@ public class Can1OverviewFragment extends Fragment {
         }
     }
 
+    private void updateRxFramesViewModel() {
+        if (mCanFramesViewModel.can1FramesRxStr.getValue() == null){
+            mCanFramesViewModel.can1FramesRxStr.setValue("");
+        }
+        mCanFramesViewModel.can1BytesRx.setValue(canTest.getPortCanbusRxByteCount());
+        mCanFramesViewModel.can1FramesRx.setValue(canTest.getPortCanbusRxFrameCount());
+        mCanFramesViewModel.can1FramesRxStr.setValue(mCanFramesViewModel.can1FramesRxStr.getValue() + canTest.canData);
+        canTest.canData.setLength(0);
+    }
+
+    private void updateTxFramesViewModel(){
+        if (mCanFramesViewModel.can1FramesTx.getValue() == null){
+            mCanFramesViewModel.can1FramesTx.setValue(0);
+        }
+        mCanFramesViewModel.can1BytesTx.setValue(canTest.getPortCanbusTxByteCount());
+        mCanFramesViewModel.can1FramesTx.setValue(canTest.getPortCanbusTxFrameCount());
+    }
+
+    private static int lastUIFramesUpdatedCountRx = 0;
+    private static int lastUIFramesUpdatedCountTx = 0;
     private void updateCountUI() {
+
         if (canTest != null){
-            String s1 = canTest.getPort1CanbusRxFrameCount() + " Frames / " + canTest.getPort1CanbusRxByteCount() + " Bytes";
-            swCycleTransmitJ1939Can1.setChecked(canTest.isAutoSendJ1939Port1());
-            textViewFramesRx.setText(s1);
-            if (canTest.getPort1CanbusRxFrameCount() == 0){
-                textViewFramesRx.setBackgroundColor(Color.WHITE);
-            }
-            else{
-                textViewFramesRx.setBackgroundColor(Color.GREEN);
+            if (canTest.getPortCanbusRxFrameCount() != lastUIFramesUpdatedCountRx){
+                updateRxFramesViewModel();
+                lastUIFramesUpdatedCountRx = canTest.getPortCanbusRxFrameCount();
             }
 
-            String s2 = "Tx: " + canTest.getPort1CanbusTxFrameCount() + " Frames / " + canTest.getPort1CanbusTxByteCount() + " Bytes";
-            textViewFramesTx.setText(s2);
-            if (canTest.getPort1CanbusTxFrameCount() == 0) {
-                textViewFramesTx.setBackgroundColor(Color.WHITE);
-            }
-            else{
-                textViewFramesTx.setBackgroundColor(Color.GREEN);
+            if (canTest.getPortCanbusTxFrameCount() != lastUIFramesUpdatedCountTx){
+                updateTxFramesViewModel();
+                lastUIFramesUpdatedCountTx = canTest.getPortCanbusTxFrameCount();
             }
         }
     }
@@ -268,6 +288,47 @@ public class Can1OverviewFragment extends Fragment {
         }
     }
 
+    private void clearUIFrameCounts(){
+        mCanFramesViewModel.can1FramesTx.setValue(0);
+        mCanFramesViewModel.can1BytesTx.setValue(0);
+        mCanFramesViewModel.can1FramesRx.setValue(0);
+        mCanFramesViewModel.can1BytesRx.setValue(0);
+        mCanFramesViewModel.can1FramesRxStr.setValue("");
+    }
+
+    private void subscribeCan1Frames(){
+        mCanFramesViewModel.can1FramesRx.observe(getActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer can1FramesRx) {
+                if (can1FramesRx != null){
+                    String s1 = mCanFramesViewModel.can1FramesRx.getValue() + " Frames / " + mCanFramesViewModel.can1BytesRx.getValue() + " Bytes";
+                    textViewFramesRx.setText(s1);
+                    if (mCanFramesViewModel.can1FramesRx.getValue() == 0){
+                        textViewFramesRx.setBackgroundColor(Color.WHITE);
+                    }
+                    else{
+                        textViewFramesRx.setBackgroundColor(Color.GREEN);
+                    }
+                }
+            }
+        });
+
+        mCanFramesViewModel.can1FramesTx.observe(getActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer can1FramesTx) {
+                if (can1FramesTx != null){
+                    String s2 = "Tx: " + mCanFramesViewModel.can1FramesTx.getValue() + " Frames / " + mCanFramesViewModel.can1BytesTx.getValue() + " Bytes";
+                    textViewFramesTx.setText(s2);
+                    if (mCanFramesViewModel.can1FramesTx.getValue() == 0) {
+                        textViewFramesTx.setBackgroundColor(Color.WHITE);
+                    }
+                    else{
+                        textViewFramesTx.setBackgroundColor(Color.GREEN);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -277,9 +338,10 @@ public class Can1OverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_can1_overview, container, false);
 
+        mCanFramesViewModel = ViewModelProviders.of(getActivity()).get(CanFramesViewModel.class);
+
         textViewFramesRx = rootView.findViewById(R.id.textViewCan1FramesRx);
         textViewFramesTx = rootView.findViewById(R.id.textViewCan1FramesTx);
-
         baudRateCan1 = rootView.findViewById(R.id.radioGrCan1BaudRates);
         toggleButtonListenCan1 = rootView.findViewById(R.id.toggleButtonCan1Listen);
         toggleButtonTermCan1 = rootView.findViewById(R.id.toggleButtonCan1Term);
@@ -301,7 +363,7 @@ public class Can1OverviewFragment extends Fragment {
         btnTransmitCAN1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                canTest.sendJ1939Port1();
+                canTest.sendJ1939Port();
             }
         });
 
@@ -365,8 +427,8 @@ public class Can1OverviewFragment extends Fragment {
         swCycleTransmitJ1939Can1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                canTest.setAutoSendJ1939Port1(swCycleTransmitJ1939Can1.isChecked());
-                canTest.sendJ1939Port1();
+                canTest.setAutoSendJ1939Port(swCycleTransmitJ1939Can1.isChecked());
+                canTest.sendJ1939Port();
             }
         });
 
@@ -397,6 +459,7 @@ public class Can1OverviewFragment extends Fragment {
         updateInterfaceStatusUI();
         setStateSocketDependentUI();
         setDockStateDependentUI();
+        subscribeCan1Frames();
         Log.d(TAG, "onCreateView end");
         return rootView;
     }
@@ -422,24 +485,24 @@ public class Can1OverviewFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             LastClosed = Calendar.getInstance().getTime();
-            if(canTest.isCan1InterfaceOpen() || canTest.isPort1SocketOpen()) {
+            if(canTest.isCanInterfaceOpen() || canTest.isPortSocketOpen()) {
                 publishProgress("Closing interface, please wait...");
-                canTest.closeCan1Interface();
+                canTest.closeCanInterface();
                 publishProgress("Closing socket, please wait...");
-                canTest.closeCan1Socket();
+                canTest.closeCanSocket();
                 return null;
             }
 
             publishProgress("Opening, please wait...");
-            int ret = canTest.CreateCanInterface1(silent, baudRate, termination, port, filtersEnabled, flowControlEnabled);
+            int ret = canTest.CreateCanInterface(silent, baudRate, termination, port, filtersEnabled, flowControlEnabled);
             if (ret == 0) {
                 LastCreated = Calendar.getInstance().getTime();
             }
             else{
                 publishProgress("Closing interface, please wait...");
-                canTest.closeCan1Interface();
+                canTest.closeCanInterface();
                 publishProgress("Closing socket, please wait...");
-                canTest.closeCan1Socket();
+                canTest.closeCanSocket();
                 publishProgress("failed");
             }
             return null;
@@ -486,7 +549,7 @@ public class Can1OverviewFragment extends Fragment {
                         Log.d(TAG, "Ports attached event received");
                         break;
                     case "com.micronet.smarttabsmarthubsampleapp.portsdetached":
-                        if (canTest.isCan1InterfaceOpen()){
+                        if (canTest.isCanInterfaceOpen()){
                             Log.d(TAG, "closing CAN1 port since the tty port detach event was received");
                             Toast.makeText(getContext().getApplicationContext(), "closing CAN1 port since the tty port detach event was received",
                                     Toast.LENGTH_SHORT).show();
