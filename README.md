@@ -3,10 +3,10 @@
 |--------|------------------------------|
 |Project|SmartTab/SmartHub Sample App|
 |Project Name |SmartTab/SmartHub Sample App |
-|Aim/Objectives |To document an Android sample application that shows application developers how to use the Hardware Library and Vehicle Bus Library with the Smart Cradle and SmartHub. |
-|Current Application Version |V1.2.5 |
-|Document Revision Number |04 |
-|Document Revision Date |19th July 2018 |
+|Aim/Objectives |To document an Android sample application that shows application developers how to use the Hardware Library and Vehicle Bus Library with the SmartTab and SmartHub. |
+|Current Application Version |V1.2.6 |
+|Document Revision Number |05 |
+|Document Revision Date |27th July 2018 |
 
 ## Documentation History 
 |Document Revision |Written By |Date |Comments |
@@ -15,6 +15,7 @@
 |02 |Scott Krstyen |13 July 2018 |Added UI section, Hardware Library Section and Important Points to discuss |
 |03 |Abid Esmail and Scott Krstyen |17 July 2018 |Added CAN bus section, background information and more information about dock events. |
 |04 |Scott Krstyen|19th July 2018|Updated app name and references to devices|
+|05 |Scott Krstyen|27th July 2018|Updated info about getting ignition and specific points about working with Smart Cradle|
 
 
 ## Preface
@@ -25,7 +26,7 @@ The purpose of this document is to explain the functionality of the SmartTab/Sma
 ## Introduction
 ### Background Information 
 
-This application was created as an example of how to use the Micronet Hardware Library and the Vehicle Bus Library on the Smart Cradle with MT5 and the SmartHub.
+This application was created as an example of how to use the Micronet Hardware Library and the Vehicle Bus Library on the Smart Cradle with SmartTab and the SmartHub.
 
 It has been built with Android Studio v3.1.3 and tested on: 
 * OS: TREQ_5_0.1.16.0_20180708.0958 
@@ -118,17 +119,38 @@ More on Local Broadcasts:
 
 https://developer.android.com/reference/android/support/v4/content/LocalBroadcastManager. 
 
+USB attachment and detachment events are especially important when dealing with the SmartTab and Smart Cradle because when the device is undocked it cannot communicate with the MCU.  
+
 The Micronet Hardware Library should not be used until at least 2 seconds after the UsbManager.ACTION_USB_DEVICE_ATTACHED broadcast has been received. If it is used too quickly then it can fail to receive information back from the device because the underlying driver needs to get initialized and can take up 2 seconds to initialize after the USB ports are available.
 
 The TTY ports can be used immediately after the UsbManager.ACTION_USB_DEVICE_ATTACHED broadcast is received. In this app that broadcast is received and then the CAN bus interface can be opened.  
+
+### Getting Ignition through Dock Events 
+When an Intent.ACTION_DOCK_EVENT is received it contains an integer extra stored with Intent.EXTRA_DOCK_STATE. There are five possible dock event states: 
+
+* Intent.EXTRA_DOCK_STATE_UNDOCKED 
+* Intent.EXTRA_DOCK_STATE_DESK 
+* Intent.EXTRA_DOCK_STATE_LE_DESK 
+* Intent.EXTRA_DOCK_STATE_HE_DESK 
+* Intent.EXTRA_DOCK_STATE_CAR 
+
+If the dock state is EXTRA_DOCK_STATE_UNDOCKED, then the device is undocked and cannot communicate with the MCU.  
+
+If the dock state is EXTRA_DOCK_STATE_DESK, EXTRA_DOCK_STATE_LE_DESK, or EXTRA_DOCK_STATE_HE_DESK, then the device is docked but ignition is low. 
+
+If the dock state is EXTRA_DOCK_STATE_CAR, then the device is docked and ignition is high.  
+
+From the dock state you can tell what the current ignition state is. 
 
 ### Handling configuration changes during dock events 
 When the device is docked and undocked, its configuration state changes. This causes the application to restart with the new configuration changes.  
 
 As detailed here: https://developer.android.com/guide/topics/resources/runtime-changes, there are two ways that you can handle the configuration change. One is to retain an object during the configuration change and the other is to handle the configuration change yourself.  
 
-## Micronet Hardware Library 
+## Micronet Hardware Library
 The Micronet Hardware Interface is used to get information from the device such as the GPIOs state and voltage and other info about the device. For more detailed information about the library, refer to the Javadocs. 
+
+Currently the Micronet Hardware Library should only be used in one app on the device at a time. 
 
 ### Importing the Micronet Hardware Library
 To import the library: 
