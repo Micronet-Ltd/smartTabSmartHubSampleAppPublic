@@ -46,14 +46,14 @@
     <string name="start_on_boot">Start On Boot</string>
     <string name="togglebutton">ToggleButton</string>
     <string name="outputs_label">Outputs</string>
+    <string name="_0_off">0 Off</string>
+    <string name="_0_on">0 On</string>
     <string name="_1_off">1 Off</string>
     <string name="_1_on">1 On</string>
     <string name="_2_off">2 Off</string>
     <string name="_2_on">2 On</string>
     <string name="_3_off">3 Off</string>
     <string name="_3_on">3 On</string>
-    <string name="_4_off">4 Off</string>
-    <string name="_4_on">4 On</string>
     <string name="blank"/>
 
 </resources>
