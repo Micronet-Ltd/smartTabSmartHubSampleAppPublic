@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
@@ -24,11 +25,9 @@ import com.micronet.smarttabsmarthubsampleapp.activities.MainActivity;
 import com.micronet.smarttabsmarthubsampleapp.adapters.GpiAdcTextAdapter;
 
 import com.micronet.smarttabsmarthubsampleapp.receivers.DeviceStateReceiver;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * GPIO Fragment Class
@@ -43,6 +42,11 @@ public class InputOutputsFragment extends Fragment {
     private Handler handler = null;
 
     private int dockState = -1;
+
+    private ToggleButton btnOutput0;
+    private ToggleButton btnOutput1;
+    private ToggleButton btnOutput2;
+    private ToggleButton btnOutput3;
 
     public InputOutputsFragment() {
         // Required empty public constructor
@@ -82,6 +86,14 @@ public class InputOutputsFragment extends Fragment {
         }
 
         this.dockState = MainActivity.getDockState();
+
+        // If the app begins in an undocked state then disable outputs.
+        if(dockState == Intent.EXTRA_DOCK_STATE_UNDOCKED){
+            enableOutputButtons(false);
+        }else{
+            enableOutputButtons(true);
+        }
+
         updateCradleIgnState();
         // Start polling thread
         startPollingThread();
@@ -122,50 +134,27 @@ public class InputOutputsFragment extends Fragment {
             }
         });
 
-        final ToggleButton btnOutput1 = rootView.findViewById(R.id.toggleButtonOutput1);
-        btnOutput1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (btnOutput1.isChecked()) {
-                    changeOutputState(1, true);
-                } else {
-                    changeOutputState(1, false);
-                }
-            }
-        });
+        btnOutput0 = rootView.findViewById(R.id.toggleButtonOutput0);
+        setUpOutputButton(btnOutput0, 0);
 
-        final ToggleButton btnOutput2 = rootView.findViewById(R.id.toggleButtonOutput2);
-        btnOutput2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (btnOutput2.isChecked()) {
-                    changeOutputState(2, true);
-                } else {
-                    changeOutputState(2, false);
-                }
-            }
-        });
+        btnOutput1 = rootView.findViewById(R.id.toggleButtonOutput1);
+        setUpOutputButton(btnOutput1, 1);
 
-        final ToggleButton btnOutput3 = rootView.findViewById(R.id.toggleButtonOutput3);
-        btnOutput3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (btnOutput3.isChecked()) {
-                    changeOutputState(3, true);
-                } else {
-                    changeOutputState(3, false);
-                }
-            }
-        });
+        btnOutput2 = rootView.findViewById(R.id.toggleButtonOutput2);
+        setUpOutputButton(btnOutput2, 2);
 
-        final ToggleButton btnOutput4 = rootView.findViewById(R.id.toggleButtonOutput4);
-        btnOutput4.setOnClickListener(new View.OnClickListener() {
+        btnOutput3 = rootView.findViewById(R.id.toggleButtonOutput3);
+        setUpOutputButton(btnOutput3, 3);
+    }
+
+    private void setUpOutputButton(final ToggleButton toggleButton, final int output){
+        toggleButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (btnOutput4.isChecked()) {
-                    changeOutputState(4, true);
-                } else {
-                    changeOutputState(4, false);
+            public void onClick(View v) {
+                if(toggleButton.isChecked()){
+                    changeOutputState(output, true);
+                }else{
+                    changeOutputState(output, false);
                 }
             }
         });
@@ -188,11 +177,13 @@ public class InputOutputsFragment extends Fragment {
                         break;
                     case DeviceStateReceiver.portsAttachedAction:
                         handler.postDelayed(updateGpioRunnable, 2000);
+                        enableOutputButtons(true);
                         Log.d(TAG, "Ports attached event received");
                         break;
                     case DeviceStateReceiver.portsDetachedAction:
                         gpiAdcTextAdapter.populateGpisAdcs();
                         gpiAdcTextAdapter.notifyDataSetChanged();
+                        enableOutputButtons(false);
                         Log.d(TAG, "Ports detached event received");
                         break;
                 }
@@ -269,16 +260,51 @@ public class InputOutputsFragment extends Fragment {
         ignitionStateTextview.setText(ignitionStateMsg);
     }
 
-    private void changeOutputState(int i, boolean state) {
-        // Not currently used
-        int gpioNum = 699 + i;
-        int gpioState = 0;
+    private void enableOutputButtons(boolean state){
+        btnOutput0.setEnabled(state);
+        btnOutput1.setEnabled(state);
+        btnOutput2.setEnabled(state);
+        btnOutput3.setEnabled(state);
+    }
 
-        if (state) {
-            gpioState = 1;
-        }
+    private void changeOutputState(int i, boolean state) {
+        int gpioNum = 700 + i;
 
         // If GPIO hasn't already been exported then export it
+        exportGpio(gpioNum);
+
+        // Change the state of the GPIO
+        changeGpioState(gpioNum, state);
+        Toast.makeText(getContext(), "Output " + i + " set " + (state ? "high": "low"), Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeGpioState(int gpioNum, boolean state) {
+        int gpioState = state ? 1: 0;
+
+        try {
+            String fileString = getContext().getFilesDir().getPath() + "/outputs.sh";
+            Log.d(TAG, "File path is: " + fileString);
+
+            File file = new File(fileString);
+            if(file.exists()){
+                boolean result = file.delete();
+            }
+
+            FileOutputStream fileOutputStream = new FileOutputStream(fileString);
+            fileOutputStream.write("#!system/bin/sh\n".getBytes());
+            fileOutputStream.write(("echo " + gpioState + " > sys/class/gpio/gpio" + gpioNum + "/value\n").getBytes());
+            fileOutputStream.write("echo $? > /data/data/com.micronet.smarttabsmarthubsampleapp/files/result.txt\n".getBytes());
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+            // Run shell script with op.se_dom_ex
+            Runtime.getRuntime().exec(new String[]{"setprop", "op.se_dom_ex", fileString});
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    private void exportGpio(int gpioNum) {
         File tempFile = new File("/sys/class/gpio/gpio" + gpioNum + "/value");
         if (!tempFile.exists()) {
             // Export GPIO
@@ -294,47 +320,6 @@ public class InputOutputsFragment extends Fragment {
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
-        }
-
-        // Change the state of the GPIO
-        try {
-            // Check to see what id the app is. Currently to run se_dom_ex you have to be shell.
-            java.lang.Process processID = Runtime.getRuntime().exec("id");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(processID.getInputStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                Log.d(TAG, line);
-            }
-            bufferedReader.close();
-
-            // DOESN'T WORK
-            // Tried this with and without quotes and it doesn't seem to work as it does in the shell.
-            String commandsChmod[] = {"/system/bin/se_dom_ex",
-                    "\"chmod 666 /sys/class/gpio/gpio700/value\""};
-            java.lang.Process processChmod = Runtime.getRuntime().exec(commandsChmod);
-            BufferedReader bufferedReaderChmod = new BufferedReader(
-                    new InputStreamReader(processChmod.getInputStream()));
-            while ((line = bufferedReaderChmod.readLine()) != null) {
-                Log.e(TAG, line);
-            }
-            bufferedReaderChmod.close();
-
-            // This command won't work for the same reason as above but also because echo doesn't seem to work
-            // properly when I try to do it this way. For example, if I try echo "hello world" using this method it
-            // doesn't work either.
-            String commandsEcho[] = {"/system/bin/se_dom_ex",
-                    "echo " + gpioState + "> /sys/class/gpio/gpio700/value"};
-            java.lang.Process processEcho = Runtime.getRuntime().exec(commandsEcho);
-            BufferedReader bufferedReaderEcho = new BufferedReader(
-                    new InputStreamReader(processEcho.getInputStream()));
-            while ((line = bufferedReaderEcho.readLine()) != null) {
-                Log.e(TAG, line);
-            }
-            Log.e(TAG, "Output " + i + " set to state " + gpioState + ". GPIO Number: " + gpioNum);
-            bufferedReaderEcho.close();
-        } catch (IOException e) {
-            Log.e(TAG, e.toString());
         }
     }
 }
