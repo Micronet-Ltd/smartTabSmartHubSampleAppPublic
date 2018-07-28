@@ -15,6 +15,7 @@ import com.micronet.canbus.CanbusSocket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 
 public class CanTest {
 
@@ -66,8 +67,8 @@ public class CanTest {
     private static final int J1939_PGN_DASH_DISP = 0x00FEFC;
 
 
-    private volatile boolean blockOnReadPort = false;
-    private final int READ_TIMEOUT = 500; // readPort1 timeout (in milliseconds)
+    private volatile boolean blockOnReadPort = true;
+    private final int READ_TIMEOUT = 100; // readPort1 timeout (in milliseconds)
 
     private int baudRate;
     private boolean removeCan;
@@ -302,17 +303,10 @@ public class CanTest {
 
     public void closeCanSocket() {
         if (isPortSocketOpen()) {
-            if (portNumber == CAN_PORT1){
-                canbusSocket.close1939Port1();
-            }
-            else if (portNumber == CAN_PORT2){
-                canbusSocket.close1939Port2();
-            }
-            canbusSocket = null;
-
             if (j1939PortReaderThread != null && j1939PortReaderThread.isAlive()) {
                 j1939PortReaderThread.interrupt();
                 try {
+                    j1939PortReader.stopRunnable();
                     j1939PortReaderThread.join(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -329,6 +323,14 @@ public class CanTest {
             if (j1939PortWriter != null){
                 j1939PortWriter.clearCounts();
             }
+
+            if (portNumber == CAN_PORT1){
+                canbusSocket.close1939Port1();
+            }
+            else if (portNumber == CAN_PORT2){
+                canbusSocket.close1939Port2();
+            }
+            canbusSocket = null;
         }
 
     }
@@ -371,6 +373,7 @@ public class CanTest {
     private class J1939PortReader implements Runnable {
         private volatile int canbusFrameCount = 0;
         private volatile int canbusByteCount = 0;
+        private volatile boolean keepRunning = true;
 
         int getCanbusFrameCount() {
             return canbusFrameCount;
@@ -383,11 +386,20 @@ public class CanTest {
         void clearValues() {
             canbusByteCount = 0;
             canbusFrameCount = 0;
+            keepRunning = true;
+        }
+
+        void stopRunnable(){
+            keepRunning = false;
         }
 
         private void getPort1Frames(){
             CanbusFramePort1 canBusFrame1;
             try {
+                if (canbusSocket == null){
+                    return;
+                }
+
                 if (blockOnReadPort) {
                     canBusFrame1 = canbusSocket.readPort1();
                 } else {
@@ -440,7 +452,6 @@ public class CanTest {
                 // Log.d(TAG, "Read timeout");
                 //}
             }catch (NullPointerException ex) {
-                // socket is null
                 return;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -450,6 +461,10 @@ public class CanTest {
         private void getPort2Frames(){
             CanbusFramePort2 canBusFrame2;
             try {
+                if (canbusSocket == null){
+                    return;
+                }
+
                 if (blockOnReadPort) {
                     canBusFrame2 = canbusSocket.readPort2();
                 } else {
@@ -502,7 +517,6 @@ public class CanTest {
                 // Log.d(TAG, "Read timeout");
                 //}
             }catch (NullPointerException ex) {
-                // socket is null
                 return;
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -511,7 +525,8 @@ public class CanTest {
 
         @Override
         public void run() {
-            while (true) {
+            Log.d(TAG, "J1939PortReader started, portNumber="+ portNumber);
+            while (keepRunning == true) {
                 if (portNumber == CAN_PORT1){
                     getPort1Frames();
                 }
@@ -519,6 +534,7 @@ public class CanTest {
                     getPort2Frames();
                 }
             }
+            Log.d(TAG, "J1939PortReader exited, portNumber="+ portNumber);
         }
     }
 
