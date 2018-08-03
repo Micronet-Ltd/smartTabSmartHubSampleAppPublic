@@ -4,9 +4,9 @@
 |Project|SmartTab/SmartHub Sample App|
 |Project Name |SmartTab/SmartHub Sample App |
 |Aim/Objectives |To document an Android sample application that shows application developers how to use the Hardware Library and Vehicle Bus Library with the SmartTab and SmartHub. |
-|Current Application Version |V1.2.6 |
-|Document Revision Number |05 |
-|Document Revision Date |27th July 2018 |
+|Current Application Version |V1.2.8 |
+|Document Revision Number |06 |
+|Document Revision Date |3 August 2018 |
 
 ## Documentation History 
 |Document Revision |Written By |Date |Comments |
@@ -16,6 +16,7 @@
 |03 |Abid Esmail and Scott Krstyen |17 July 2018 |Added CAN bus section, background information and more information about dock events. |
 |04 |Scott Krstyen|19th July 2018|Updated app name and references to devices|
 |05 |Scott Krstyen|27th July 2018|Updated info about getting ignition and specific points about working with Smart Cradle|
+|06 |Scott Krstyen|3 August 2018|Added information about how outputs are used in the Sample App. |
 
 
 ## Preface
@@ -29,7 +30,7 @@ The purpose of this document is to explain the functionality of the SmartTab/Sma
 This application was created as an example of how to use the Micronet Hardware Library and the Vehicle Bus Library on the Smart Cradle with SmartTab and the SmartHub.
 
 It has been built with Android Studio v3.1.3 and tested on: 
-* OS: TREQ_5_0.1.16.0_20180708.0958 
+* OS: TREQ_5_0.1.16.2_20180722.0954 
 * MCU Firmware: A.3.2.0 
 * FPGA: 41000003 
 
@@ -49,8 +50,11 @@ Read device information such as the OS version, MCU version, FPGA version and se
 #### Dock and Undock handling and USB event processing 
 Create a broadcast receiver for dock and undock events and display it on the UI. Handle USB events that indicate loss of communication from the MCU. 
 
+#### General Purpose Outputs (GPO) control
+Change outputs to high or low using the Micronet Hardware Library. 
+
 #### Future Features 
-General purpose outputs (GPO) control, sending and receiving J1708 messages. 
+Sending and receiving J1708 messages. 
 
 
 ## User Interface
@@ -146,6 +150,9 @@ From the dock state you can tell what the current ignition state is.
 When the device is docked and undocked, its configuration state changes. This causes the application to restart with the new configuration changes.  
 
 As detailed here: https://developer.android.com/guide/topics/resources/runtime-changes, there are two ways that you can handle the configuration change. One is to retain an object during the configuration change and the other is to handle the configuration change yourself.  
+
+## GPIO Outputs
+The outputs are set using the Micronet Hardware Library. Outputs will only work on OS 0.1.17.0 or above. Specifics about how to set the outputs are described below.
 
 ## Micronet Hardware Library
 The Micronet Hardware Interface is used to get information from the device such as the GPIOs state and voltage and other info about the device. For more detailed information about the library, refer to the Javadocs. 
@@ -250,6 +257,17 @@ try{
 } catch (MicronetHardwareException e) { 
     Log.e(TAG, e.toString()); 
 } 
+```
+
+### How to set the GPIO Outputs
+To set the GPIO outputs use setOutputState(). You can set Output 0-3 high or low. There is a validate parameter that will make sure that the output was set properly. It is advised that users use this validation parameter. More information on setting the outputs can be found in the library's Javadocs.
+``` java
+try {
+     MicronetHardware micronetHardware = MicronetHardware.getInstance();
+     micronetHardware.setOutputState(MicronetHardware.OUTPUT_0, state, true);
+} catch (MicronetHardwareException e) {
+     Log.e(TAG, e.toString());
+}
 ```
 
 ### Handling Micronet Hardware Exceptions 

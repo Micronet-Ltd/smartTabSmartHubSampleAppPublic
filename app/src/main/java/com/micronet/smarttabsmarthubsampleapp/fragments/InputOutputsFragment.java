@@ -28,6 +28,8 @@ import com.micronet.smarttabsmarthubsampleapp.receivers.DeviceStateReceiver;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import micronet.hardware.MicronetHardware;
+import micronet.hardware.exception.MicronetHardwareException;
 
 /**
  * GPIO Fragment Class
@@ -135,16 +137,16 @@ public class InputOutputsFragment extends Fragment {
         });
 
         btnOutput0 = rootView.findViewById(R.id.toggleButtonOutput0);
-        setUpOutputButton(btnOutput0, 0);
+        setUpOutputButton(btnOutput0, MicronetHardware.OUTPUT_0);
 
         btnOutput1 = rootView.findViewById(R.id.toggleButtonOutput1);
-        setUpOutputButton(btnOutput1, 1);
+        setUpOutputButton(btnOutput1, MicronetHardware.OUTPUT_1);
 
         btnOutput2 = rootView.findViewById(R.id.toggleButtonOutput2);
-        setUpOutputButton(btnOutput2, 2);
+        setUpOutputButton(btnOutput2, MicronetHardware.OUTPUT_2);
 
         btnOutput3 = rootView.findViewById(R.id.toggleButtonOutput3);
-        setUpOutputButton(btnOutput3, 3);
+        setUpOutputButton(btnOutput3, MicronetHardware.OUTPUT_3);
     }
 
     private void setUpOutputButton(final ToggleButton toggleButton, final int output){
@@ -267,59 +269,14 @@ public class InputOutputsFragment extends Fragment {
         btnOutput3.setEnabled(state);
     }
 
-    private void changeOutputState(int i, boolean state) {
-        int gpioNum = 700 + i;
-
-        // If GPIO hasn't already been exported then export it
-        exportGpio(gpioNum);
-
-        // Change the state of the GPIO
-        changeGpioState(gpioNum, state);
-        Toast.makeText(getContext(), "Output " + i + " set " + (state ? "high": "low"), Toast.LENGTH_SHORT).show();
-    }
-
-    private void changeGpioState(int gpioNum, boolean state) {
-        int gpioState = state ? 1: 0;
-
+    private void changeOutputState(int outputNum, boolean state) {
         try {
-            String fileString = getContext().getFilesDir().getPath() + "/outputs.sh";
-            Log.d(TAG, "File path is: " + fileString);
-
-            File file = new File(fileString);
-            if(file.exists()){
-                boolean result = file.delete();
-            }
-
-            FileOutputStream fileOutputStream = new FileOutputStream(fileString);
-            fileOutputStream.write("#!system/bin/sh\n".getBytes());
-            fileOutputStream.write(("echo " + gpioState + " > sys/class/gpio/gpio" + gpioNum + "/value\n").getBytes());
-            fileOutputStream.write("echo $? > /data/data/com.micronet.smarttabsmarthubsampleapp/files/result.txt\n".getBytes());
-            fileOutputStream.flush();
-            fileOutputStream.close();
-
-            // Run shell script with op.se_dom_ex
-            Runtime.getRuntime().exec(new String[]{"setprop", "op.se_dom_ex", fileString});
-        } catch (IOException e) {
+            MicronetHardware micronetHardware = MicronetHardware.getInstance();
+            micronetHardware.setOutputState(outputNum, state, true);
+        } catch (MicronetHardwareException e) {
             Log.e(TAG, e.toString());
         }
-    }
 
-    private void exportGpio(int gpioNum) {
-        File tempFile = new File("/sys/class/gpio/gpio" + gpioNum + "/value");
-        if (!tempFile.exists()) {
-            // Export GPIO
-            try {
-                File file = new File("/sys/class/gpio/export");
-
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                fileOutputStream.write(String.valueOf(gpioNum).getBytes());
-
-                fileOutputStream.flush();
-                fileOutputStream.close();
-                Log.d(TAG, "GPIO " + gpioNum + "Exported");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
+        Toast.makeText(getContext(), "Output " + outputNum + " set " + (state ? "high": "low"), Toast.LENGTH_SHORT).show();
     }
 }
