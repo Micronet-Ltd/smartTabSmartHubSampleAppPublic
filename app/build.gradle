@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation files('libs/vehicleBusApi.jar')
+    implementation files('libs/Vehiclebus_api.jar')
     implementation files('libs/MicronetHardwareLib.aar')
     implementation fileTree(dir: 'libs',include: ['*.jar', '*.aar', "*.so"])
     implementation 'com.android.support:appcompat-v7:27.1.1'
